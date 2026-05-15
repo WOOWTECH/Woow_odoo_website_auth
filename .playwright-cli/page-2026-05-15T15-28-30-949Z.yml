@@ -1,0 +1,122 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - img [ref=e3]
+    - generic [ref=e5]:
+      - link "" [ref=e6] [cursor=pointer]:
+        - /url: "#"
+      - link "Editor" [ref=e7] [cursor=pointer]:
+        - /url: http://localhost:9102/@/blog
+  - generic [ref=e8]:
+    - banner [ref=e9]:
+      - navigation "Main" [ref=e10]:
+        - generic [ref=e11]:
+          - link "Logo of My Website" [ref=e12] [cursor=pointer]:
+            - /url: /
+            - img "Logo of My Website" [ref=e13]:
+              - img "My Website" [ref=e14]
+          - menu [ref=e15]:
+            - menuitem "Home" [ref=e16] [cursor=pointer]
+            - menuitem "Contact us" [ref=e17] [cursor=pointer]
+          - list [ref=e18]:
+            - listitem [ref=e19]:
+              - button "" [ref=e20] [cursor=pointer]:
+                - generic [ref=e21]: 
+            - listitem [ref=e22]:
+              - link " +1 555-555-5556" [ref=e24] [cursor=pointer]:
+                - /url: tel:+1 555-555-5556
+                - generic [ref=e25]: 
+                - generic [ref=e26]: +1 555-555-5556
+            - listitem [ref=e27]:
+              - button "Administrator" [ref=e28] [cursor=pointer]
+              - text:   
+            - listitem [ref=e29]:
+              - link "Contact Us" [ref=e33] [cursor=pointer]:
+                - /url: /contactus
+    - main [ref=e34]:
+      - generic [ref=e35]:
+        - generic [ref=e36]:
+          - generic [ref=e37]:
+            - generic [ref=e38]:
+              - paragraph [ref=e39]: This page does not exist, but you can create it as you are editor of this site.
+              - button "Create Page"
+            - generic [ref=e40]:
+              - generic [ref=e41]: 
+              - text: Edit the content below this line to adapt the default
+              - strong [ref=e42]: Page not found
+              - text: page.
+          - separator [ref=e43]
+        - generic [ref=e47]:
+          - generic [ref=e49]:
+            - heading "Error 404" [level=1] [ref=e50]
+            - heading "We couldn't find the page you're looking for!" [level=2] [ref=e51]
+            - paragraph
+            - paragraph [ref=e52]:
+              - text: Don't panic. If you think it's our mistake, please send us a message on
+              - link "this page" [ref=e53] [cursor=pointer]:
+                - /url: /contactus
+              - text: .
+          - separator [ref=e56]
+          - generic [ref=e57]:
+            - paragraph [ref=e58]: Maybe you were looking for one of these popular pages?
+            - list [ref=e59]:
+              - listitem [ref=e60]:
+                - link "Home" [ref=e61] [cursor=pointer]:
+                  - /url: /
+      - generic: 
+    - contentinfo [ref=e62]:
+      - generic [ref=e66]:
+        - generic [ref=e67]:
+          - heading "Useful Links" [level=5] [ref=e68]
+          - list [ref=e69]:
+            - listitem [ref=e70]:
+              - link "Home" [ref=e71] [cursor=pointer]:
+                - /url: /
+            - listitem [ref=e72]:
+              - link "About us" [ref=e73] [cursor=pointer]:
+                - /url: "#"
+            - listitem [ref=e74]:
+              - link "Products" [ref=e75] [cursor=pointer]:
+                - /url: "#"
+            - listitem [ref=e76]:
+              - link "Services" [ref=e77] [cursor=pointer]:
+                - /url: "#"
+            - listitem [ref=e78]:
+              - link "Legal" [ref=e79] [cursor=pointer]:
+                - /url: "#"
+            - listitem [ref=e80]:
+              - link "Contact us" [ref=e81] [cursor=pointer]:
+                - /url: /contactus
+        - generic [ref=e82]:
+          - heading "About us" [level=5] [ref=e83]
+          - paragraph [ref=e84]:
+            - text: We are a team of passionate people whose goal is to improve everyone's life through disruptive products. We build great products to solve your business problems.
+            - text: Our products are designed for small to medium size companies willing to optimize their performance.
+        - generic [ref=e85]:
+          - heading "Connect with us" [level=5] [ref=e86]
+          - list [ref=e87]:
+            - listitem [ref=e88]:
+              - generic [ref=e89]: 
+              - link "Contact us" [ref=e91] [cursor=pointer]:
+                - /url: /contactus
+            - listitem [ref=e92]:
+              - generic [ref=e93]: 
+              - link "info@yourcompany.example.com" [ref=e95] [cursor=pointer]:
+                - /url: mailto:info@yourcompany.example.com
+            - listitem [ref=e96]:
+              - generic [ref=e97]: 
+              - link "+1 555-555-5556" [ref=e99] [cursor=pointer]:
+                - /url: tel:+1 555-555-5556
+          - generic [ref=e100]:
+            - link "Facebook" [ref=e101] [cursor=pointer]:
+              - /url: /website/social/facebook
+              - generic [ref=e102]: 
+            - link "X" [ref=e103] [cursor=pointer]:
+              - /url: /website/social/twitter
+              - generic [ref=e104]: 
+            - link "LinkedIn" [ref=e105] [cursor=pointer]:
+              - /url: /website/social/linkedin
+              - generic [ref=e106]: 
+            - link "Extra page" [ref=e107] [cursor=pointer]:
+              - /url: /
+              - generic [ref=e108]: 
+      - generic [ref=e112]: Copyright © Company name

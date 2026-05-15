@@ -1,0 +1,112 @@
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - button "" [ref=e5] [cursor=pointer]:
+        - generic [ref=e6]: 
+      - menuitem "Website" [ref=e128] [cursor=pointer]
+      - menu [ref=e8]:
+        - button "Site" [ref=e129] [cursor=pointer]:
+          - generic [ref=e130]: Site
+        - button "Reporting" [ref=e131] [cursor=pointer]:
+          - generic [ref=e132]: Reporting
+        - button "Configuration" [ref=e133] [cursor=pointer]:
+          - generic [ref=e134]: Configuration
+      - menu [ref=e11]:
+        - button "Open developer tools" [ref=e13] [cursor=pointer]:
+          - img "Open developer tools" [ref=e14]: 
+        - button "Messages 3" [ref=e164] [cursor=pointer]:
+          - img "Messages" [ref=e165]: 
+          - generic [ref=e166]: "3"
+        - button "Activities" [ref=e167] [cursor=pointer]:
+          - img "Activities" [ref=e168]: 
+        - button "My Company" [disabled] [ref=e170]:
+          - text: 
+          - generic [ref=e171]: My Company
+        - button "User Administrator  odoowebsiteauth" [ref=e173] [cursor=pointer]:
+          - img "User" [ref=e174]
+          - generic [ref=e175]:
+            - text: Administrator
+            - mark [ref=e176]:
+              - generic [ref=e177]: 
+              - text: odoowebsiteauth
+  - generic [ref=e509]:
+    - generic [ref=e511]:
+      - generic [ref=e512]:
+        - button "New" [ref=e515] [cursor=pointer]
+        - generic [ref=e516]:
+          - list [ref=e517]:
+            - listitem [ref=e518]:
+              - link "Auth Rules" [ref=e519] [cursor=pointer]:
+                - /url: /odoo/action-206
+          - generic [ref=e520]:
+            - generic [ref=e522]: New
+            - button "" [ref=e526] [cursor=pointer]:
+              - generic [ref=e527]: 
+        - generic [ref=e529]:
+          - button "Save manually" [ref=e530] [cursor=pointer]:
+            - generic [ref=e531]: 
+          - button "Discard all changes" [ref=e532] [cursor=pointer]:
+            - generic [ref=e533]: 
+      - checkbox [checked] [ref=e538] [cursor=pointer]
+    - generic [ref=e542]:
+      - generic [ref=e543]:
+        - generic [ref=e544]:
+          - generic [ref=e546]: 基本設定
+          - generic [ref=e547]:
+            - generic [ref=e549]:
+              - text: 規則名稱
+              - superscript [ref=e550]: "?"
+            - textbox "規則名稱?" [active] [ref=e553]
+          - generic [ref=e554]:
+            - generic [ref=e556]:
+              - text: 排序
+              - superscript [ref=e557]: "?"
+            - textbox "排序?" [ref=e560]: "10"
+          - generic [ref=e561]:
+            - generic [ref=e563]:
+              - text: 網站
+              - superscript [ref=e564]: "?"
+            - combobox "網站?" [ref=e570]
+        - generic [ref=e571]:
+          - generic [ref=e573]: 頁面設定
+          - generic [ref=e574]:
+            - generic [ref=e576]:
+              - text: 頁面類型
+              - superscript [ref=e577]: "?"
+            - combobox "頁面類型?" [ref=e580] [cursor=pointer]:
+              - option "動態頁面"
+              - option "靜態頁面" [selected]
+          - generic [ref=e581]:
+            - generic [ref=e583]:
+              - text: 靜態頁面
+              - superscript [ref=e584]: "?"
+            - combobox "靜態頁面?" [ref=e613]
+      - generic [ref=e588]:
+        - generic [ref=e589]:
+          - generic [ref=e591]: 存取控制
+          - generic [ref=e592]:
+            - generic [ref=e594]:
+              - text: 驗證模式
+              - superscript [ref=e595]: "?"
+            - combobox "驗證模式?" [ref=e598] [cursor=pointer]:
+              - option "任何登入用戶"
+              - option "指定群組"
+              - option "多群組（任一）" [selected]
+          - generic [ref=e614]:
+            - generic [ref=e616]:
+              - text: 群組清單
+              - superscript [ref=e617]: "?"
+            - combobox "群組清單?" [ref=e624]
+        - generic [ref=e599]:
+          - generic [ref=e601]: 拒絕行為
+          - generic [ref=e602]:
+            - generic [ref=e604]:
+              - text: 拒絕行為
+              - superscript [ref=e605]: "?"
+            - combobox "拒絕行為?" [ref=e608] [cursor=pointer]:
+              - option "導向登入頁" [selected]
+              - option "導向自訂 URL"
+              - option "顯示 403 頁面"
+  - generic:
+    - generic:
+      - paragraph: Press esc to exit full screen

@@ -1,0 +1,116 @@
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - button "" [ref=e5] [cursor=pointer]:
+        - generic [ref=e6]: 
+      - menuitem "Website" [ref=e128] [cursor=pointer]
+      - menu [ref=e8]:
+        - button "Site" [ref=e129] [cursor=pointer]:
+          - generic [ref=e130]: Site
+        - button "Reporting" [ref=e131] [cursor=pointer]:
+          - generic [ref=e132]: Reporting
+        - button "Configuration" [ref=e133] [cursor=pointer]:
+          - generic [ref=e134]: Configuration
+      - menu [ref=e11]:
+        - button "Open developer tools" [ref=e13] [cursor=pointer]:
+          - img "Open developer tools" [ref=e14]: 
+        - button "Messages 3" [ref=e164] [cursor=pointer]:
+          - img "Messages" [ref=e165]: 
+          - generic [ref=e166]: "3"
+        - button "Activities" [ref=e167] [cursor=pointer]:
+          - img "Activities" [ref=e168]: 
+        - button "My Company" [disabled] [ref=e170]:
+          - text: 
+          - generic [ref=e171]: My Company
+        - button "User Administrator  odoowebsiteauth" [ref=e173] [cursor=pointer]:
+          - img "User" [ref=e174]
+          - generic [ref=e175]:
+            - text: Administrator
+            - mark [ref=e176]:
+              - generic [ref=e177]: 
+              - text: odoowebsiteauth
+  - generic [ref=e625]:
+    - generic [ref=e627]:
+      - generic [ref=e628]:
+        - button "New" [ref=e631] [cursor=pointer]
+        - generic [ref=e632]:
+          - generic [ref=e634]: Auth Rules
+          - button "" [ref=e638] [cursor=pointer]:
+            - generic [ref=e639]: 
+      - search [ref=e641]:
+        - search [ref=e642]:
+          - button "Search..." [ref=e643] [cursor=pointer]:
+            - img [ref=e644]: 
+          - searchbox "Search..." [active] [ref=e646]
+        - button "" [ref=e647] [cursor=pointer]
+      - search [ref=e649]:
+        - navigation "Pager" [ref=e650]:
+          - generic [ref=e651]:
+            - generic [ref=e652]: 1-1
+            - text: / 1
+          - generic [ref=e653]:
+            - button "Previous" [disabled]:
+              - generic: 
+            - button "Next" [disabled]:
+              - generic: 
+    - table [ref=e656]:
+      - rowgroup [ref=e657]:
+        - row "規則名稱  頁面類型  路徑 驗證模式  指定群組  啟用  " [ref=e658]:
+          - columnheader [ref=e659] [cursor=pointer]:
+            - checkbox [ref=e661]
+          - columnheader [ref=e662] [cursor=pointer]
+          - columnheader "規則名稱 " [ref=e663] [cursor=pointer]:
+            - generic [ref=e664]:
+              - generic [ref=e665]: 規則名稱
+              - generic [ref=e666]: 
+          - columnheader "頁面類型 " [ref=e668] [cursor=pointer]:
+            - generic [ref=e669]:
+              - generic [ref=e670]: 頁面類型
+              - generic [ref=e671]: 
+          - columnheader "路徑" [ref=e673]:
+            - generic [ref=e674]:
+              - generic [ref=e675]: 路徑
+              - text: 
+          - columnheader "驗證模式 " [ref=e677] [cursor=pointer]:
+            - generic [ref=e678]:
+              - generic [ref=e679]: 驗證模式
+              - generic [ref=e680]: 
+          - columnheader "指定群組 " [ref=e682] [cursor=pointer]:
+            - generic [ref=e683]:
+              - generic [ref=e684]: 指定群組
+              - generic [ref=e685]: 
+          - columnheader "啟用 " [ref=e687] [cursor=pointer]:
+            - generic [ref=e688]:
+              - generic [ref=e689]: 啟用
+              - generic [ref=e690]: 
+          - columnheader "" [ref=e692]:
+            - button "" [ref=e694] [cursor=pointer]:
+              - generic [ref=e695]: 
+      - rowgroup [ref=e696]:
+        - row " 測試動態規則 - Appointment 動態頁面 /appointment 指定群組 Membership / Silver Member" [ref=e697]:
+          - cell [ref=e698]:
+            - checkbox [ref=e700] [cursor=pointer]
+          - cell "" [ref=e701] [cursor=pointer]:
+            - generic [ref=e703]: 
+          - cell "測試動態規則 - Appointment" [ref=e704] [cursor=pointer]
+          - cell "動態頁面" [ref=e705] [cursor=pointer]
+          - cell "/appointment" [ref=e706] [cursor=pointer]
+          - cell "指定群組" [ref=e707] [cursor=pointer]
+          - cell "Membership / Silver Member" [ref=e708] [cursor=pointer]
+          - cell [ref=e709] [cursor=pointer]:
+            - checkbox [checked] [ref=e713]
+          - cell [ref=e714]
+      - rowgroup [ref=e715]:
+        - row [ref=e716]:
+          - cell [ref=e717]
+          - cell [ref=e718]
+          - cell [ref=e719]
+          - cell [ref=e720]
+          - cell [ref=e721]
+          - cell [ref=e722]
+          - cell [ref=e723]
+          - cell [ref=e724]
+          - cell [ref=e725]
+  - generic:
+    - generic:
+      - paragraph: Press esc to exit full screen

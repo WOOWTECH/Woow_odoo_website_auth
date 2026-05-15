@@ -1,0 +1,97 @@
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - button "" [ref=e5] [cursor=pointer]:
+        - generic [ref=e6]: 
+      - menuitem "Website" [ref=e128] [cursor=pointer]
+      - menu [ref=e8]:
+        - button "Site" [ref=e129] [cursor=pointer]:
+          - generic [ref=e130]: Site
+        - button "Reporting" [ref=e131] [cursor=pointer]:
+          - generic [ref=e132]: Reporting
+        - button "Configuration" [ref=e133] [cursor=pointer]:
+          - generic [ref=e134]: Configuration
+      - menu [ref=e11]:
+        - button "Open developer tools" [ref=e13] [cursor=pointer]:
+          - img "Open developer tools" [ref=e14]: 
+        - button "Messages 3" [ref=e164] [cursor=pointer]:
+          - img "Messages" [ref=e165]: 
+          - generic [ref=e166]: "3"
+        - button "Activities" [ref=e167] [cursor=pointer]:
+          - img "Activities" [ref=e168]: 
+        - button "My Company" [disabled] [ref=e170]:
+          - text: 
+          - generic [ref=e171]: My Company
+        - button "User Administrator  odoowebsiteauth" [ref=e173] [cursor=pointer]:
+          - img "User" [ref=e174]
+          - generic [ref=e175]:
+            - text: Administrator
+            - mark [ref=e176]:
+              - generic [ref=e177]: 
+              - text: odoowebsiteauth
+  - generic [ref=e178]:
+    - generic [ref=e180]:
+      - generic [ref=e181]:
+        - button "New" [ref=e184] [cursor=pointer]
+        - generic [ref=e185]:
+          - generic [ref=e187]: Auth Rules
+          - button "" [ref=e191] [cursor=pointer]:
+            - generic [ref=e192]: 
+      - search [ref=e194]:
+        - search [ref=e195]:
+          - button "Search..." [ref=e196] [cursor=pointer]:
+            - img [ref=e197]: 
+          - searchbox "Search..." [active] [ref=e199]
+        - button "" [ref=e200] [cursor=pointer]
+    - generic [ref=e202]:
+      - generic [ref=e203]:
+        - paragraph [ref=e204]: 建立第一條存取控制規則
+        - paragraph [ref=e205]: 在這裡管理網站頁面的存取控制。您可以設定動態頁面（URL 前綴）或靜態頁面的權限規則。
+      - table [ref=e206]:
+        - rowgroup [ref=e207]:
+          - row "規則名稱  頁面類型  路徑 驗證模式  指定群組  啟用  " [ref=e208]:
+            - columnheader [ref=e209] [cursor=pointer]:
+              - checkbox [ref=e211]
+            - columnheader [ref=e212] [cursor=pointer]
+            - columnheader "規則名稱 " [ref=e213] [cursor=pointer]:
+              - generic [ref=e214]:
+                - generic [ref=e215]: 規則名稱
+                - generic [ref=e216]: 
+            - columnheader "頁面類型 " [ref=e218] [cursor=pointer]:
+              - generic [ref=e219]:
+                - generic [ref=e220]: 頁面類型
+                - generic [ref=e221]: 
+            - columnheader "路徑" [ref=e223]:
+              - generic [ref=e224]:
+                - generic [ref=e225]: 路徑
+                - text: 
+            - columnheader "驗證模式 " [ref=e227] [cursor=pointer]:
+              - generic [ref=e228]:
+                - generic [ref=e229]: 驗證模式
+                - generic [ref=e230]: 
+            - columnheader "指定群組 " [ref=e232] [cursor=pointer]:
+              - generic [ref=e233]:
+                - generic [ref=e234]: 指定群組
+                - generic [ref=e235]: 
+            - columnheader "啟用 " [ref=e237] [cursor=pointer]:
+              - generic [ref=e238]:
+                - generic [ref=e239]: 啟用
+                - generic [ref=e240]: 
+            - columnheader "" [ref=e242]:
+              - button "" [ref=e244] [cursor=pointer]:
+                - generic [ref=e245]: 
+        - rowgroup
+        - rowgroup [ref=e246]:
+          - row [ref=e247]:
+            - cell [ref=e248]
+            - cell [ref=e249]
+            - cell [ref=e250]
+            - cell [ref=e251]
+            - cell [ref=e252]
+            - cell [ref=e253]
+            - cell [ref=e254]
+            - cell [ref=e255]
+            - cell [ref=e256]
+  - generic:
+    - generic:
+      - paragraph: Press esc to exit full screen

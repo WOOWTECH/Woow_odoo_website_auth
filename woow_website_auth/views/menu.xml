@@ -5,7 +5,7 @@
     <menuitem
         id="menu_woow_website_auth_rule"
         name="Auth Rules"
-        parent="website.menu_website_configuration"
+        parent="website.menu_website_global_configuration"
         action="woow_website_auth_rule_action"
         sequence="90"/>
 

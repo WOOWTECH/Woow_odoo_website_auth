@@ -1,0 +1,25 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - button "" [ref=e5] [cursor=pointer]:
+        - generic [ref=e6]: 
+      - menuitem "Settings" [ref=e7] [cursor=pointer]
+      - menu [ref=e8]:
+        - menuitem "General Settings" [ref=e9] [cursor=pointer]
+        - button "Users & Companies" [ref=e10] [cursor=pointer]:
+          - generic [ref=e11]: Users & Companies
+      - menu [ref=e12]:
+        - button "Messages 1" [ref=e14] [cursor=pointer]:
+          - img "Messages" [ref=e15]: 
+          - generic [ref=e16]: "1"
+        - button "Activities" [ref=e17] [cursor=pointer]:
+          - img "Activities" [ref=e18]: 
+        - button "My Company" [disabled] [ref=e20]:
+          - text: 
+          - generic [ref=e21]: My Company
+        - button "User" [ref=e23] [cursor=pointer]:
+          - img "User" [ref=e24]
+          - text: 
+  - generic:
+    - generic:
+      - paragraph: Press esc to exit full screen

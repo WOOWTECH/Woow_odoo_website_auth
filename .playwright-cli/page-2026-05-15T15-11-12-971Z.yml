@@ -1,0 +1,41 @@
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - button "" [active] [ref=e5] [cursor=pointer]:
+        - generic [ref=e6]: 
+      - menuitem "Website" [ref=e128] [cursor=pointer]
+      - menu [ref=e8]:
+        - button "Site" [ref=e129] [cursor=pointer]:
+          - generic [ref=e130]: Site
+        - button "Reporting" [ref=e131] [cursor=pointer]:
+          - generic [ref=e132]: Reporting
+        - button "Configuration" [ref=e133] [cursor=pointer]:
+          - generic [ref=e134]: Configuration
+      - menu [ref=e11]:
+        - button "Open developer tools" [ref=e13] [cursor=pointer]:
+          - img "Open developer tools" [ref=e14]: 
+        - button "User Administrator  odoowebsiteauth" [ref=e136] [cursor=pointer]:
+          - img "User" [ref=e137]
+          - generic [ref=e138]:
+            - text: Administrator
+            - mark [ref=e139]:
+              - generic [ref=e140]: 
+              - text: odoowebsiteauth
+        - link "Mobile preview" [ref=e142] [cursor=pointer]:
+          - /url: "#"
+          - img "Mobile preview" [ref=e143]: 
+        - link "New" [ref=e145] [cursor=pointer]:
+          - /url: "#"
+  - generic [ref=e30]:
+    - generic:
+      - generic:
+        - generic:
+          - img "Loading..."
+      - generic:
+        - iframe [ref=e146]:
+          
+        - iframe [ref=e147]:
+          
+  - generic:
+    - generic:
+      - paragraph: Press esc to exit full screen

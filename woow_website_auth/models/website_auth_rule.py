@@ -195,7 +195,7 @@ class WoowWebsiteAuthRule(models.Model):
             page = rule.website_page_id.sudo()
             if rule.auth_mode == 'signed_in':
                 page.write({
-                    'visibility': 'signed_in',
+                    'visibility': 'connected',
                     'groups_id': [(5, 0, 0)],
                 })
             elif rule.auth_mode == 'group' and rule.group_id:
