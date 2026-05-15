@@ -1,6 +1,0 @@
-[     641ms] [LOG] click .o-mail-DiscussSidebarCategory-channel .o-mail-DiscussSidebarCategory-add @ http://localhost:9102/web/assets/2006d3c/web.assets_web.min.js:10838
-[     908ms] [INFO] Owl is running in 'dev' mode. @ http://localhost:9102/web/assets/2006d3c/web.assets_web.min.js:1602
-[  347949ms] [WARNING] Missing widget: boolean_button for field of type boolean @ http://localhost:9102/web/assets/2006d3c/web.assets_web.min.js:7743
-[  601753ms] [WARNING] Missing widget: boolean_button for field of type boolean @ http://localhost:9102/web/assets/2006d3c/web.assets_web.min.js:7743
-[  743523ms] [LOG] click .o-mail-DiscussSidebarCategory-channel .o-mail-DiscussSidebarCategory-add @ http://localhost:9102/web/assets/2006d3c/web.assets_web.min.js:10838
-[  743550ms] [INFO] Owl is running in 'dev' mode. @ http://localhost:9102/web/assets/2006d3c/web.assets_web.min.js:1602

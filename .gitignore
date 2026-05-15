@@ -1,0 +1,30 @@
+# Podman / Docker runtime data
+podman_docker_app/
+
+# Playwright test artifacts
+.playwright-cli/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Odoo
+*.pyc
+filestore/
+
+# Environment
+.env
+*.log
