@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- Tree View（列表）                                              -->
+    <!-- ============================================================ -->
+    <record id="woow_website_auth_rule_view_tree" model="ir.ui.view">
+        <field name="name">woow.website.auth.rule.tree</field>
+        <field name="model">woow.website.auth.rule</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="page_type"/>
+                <field name="path_prefix" column_invisible="True"/>
+                <field name="website_page_id" column_invisible="True"/>
+                <field name="display_path" string="路徑"/>
+                <field name="auth_mode"/>
+                <field name="group_id" optional="show"/>
+                <field name="website_id" optional="hide"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Form View（表單）                                              -->
+    <!-- ============================================================ -->
+    <record id="woow_website_auth_rule_view_form" model="ir.ui.view">
+        <field name="name">woow.website.auth.rule.form</field>
+        <field name="model">woow.website.auth.rule</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <field name="active" widget="boolean_button"
+                               options='{"terminology": "archive"}'/>
+                    </div>
+                    <group>
+                        <group string="基本設定">
+                            <field name="name"/>
+                            <field name="sequence"/>
+                            <field name="website_id"/>
+                        </group>
+                        <group string="頁面設定">
+                            <field name="page_type"/>
+                            <field name="path_prefix"
+                                   invisible="page_type != 'dynamic'"
+                                   required="page_type == 'dynamic'"/>
+                            <field name="website_page_id"
+                                   invisible="page_type != 'static'"
+                                   required="page_type == 'static'"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="存取控制">
+                            <field name="auth_mode"/>
+                            <field name="group_id"
+                                   invisible="auth_mode != 'group'"
+                                   required="auth_mode == 'group'"/>
+                            <field name="group_ids" widget="many2many_tags"
+                                   invisible="auth_mode != 'multi_group'"
+                                   required="auth_mode == 'multi_group'"/>
+                        </group>
+                        <group string="拒絕行為">
+                            <field name="deny_action"/>
+                            <field name="redirect_url"
+                                   invisible="deny_action != 'redirect_custom'"
+                                   required="deny_action == 'redirect_custom'"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Action                                                        -->
+    <!-- ============================================================ -->
+    <record id="woow_website_auth_rule_action" model="ir.actions.act_window">
+        <field name="name">Auth Rules</field>
+        <field name="res_model">woow.website.auth.rule</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                建立第一條存取控制規則
+            </p>
+            <p>
+                在這裡管理網站頁面的存取控制。您可以設定動態頁面（URL 前綴）或靜態頁面的權限規則。
+            </p>
+        </field>
+    </record>
+
+</odoo>

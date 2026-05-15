@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 選單：Website > Configuration > Auth Rules -->
+    <menuitem
+        id="menu_woow_website_auth_rule"
+        name="Auth Rules"
+        parent="website.menu_website_configuration"
+        action="woow_website_auth_rule_action"
+        sequence="90"/>
+
+</odoo>
