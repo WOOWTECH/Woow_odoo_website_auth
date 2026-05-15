@@ -1,6 +1,10 @@
 # Podman / Docker runtime data
 podman_docker_app/
 
+# Local deployment scripts (contain hardcoded paths)
+install.sh
+upgrade.sh
+
 # Playwright test artifacts
 .playwright-cli/
 
