@@ -5,7 +5,8 @@
 包含規則的 CRUD、靜態頁面同步邏輯、以及 ormcache 快取機制。
 """
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 from odoo.tools import ormcache
 
 
@@ -129,6 +130,43 @@ class WoowWebsiteAuthRule(models.Model):
                 rule.display_path = ''
 
     # ================================================================
+    # Constraints
+    # ================================================================
+
+    @api.constrains('page_type', 'auth_mode')
+    def _check_static_multi_group(self):
+        """靜態頁面不支援 multi_group 驗證模式
+
+        Odoo 原生 website.page 的 groups_id 只支援單一 group，
+        因此靜態頁面規則的 auth_mode 不允許 multi_group。
+        """
+        for rule in self:
+            if rule.page_type == 'static' and rule.auth_mode == 'multi_group':
+                raise ValidationError(
+                    _('Static pages do not support multi-group auth mode. '
+                      'Rule: %s', rule.name)
+                )
+
+    @api.constrains('page_type', 'path_prefix')
+    def _check_path_prefix(self):
+        """動態頁面的 path_prefix 必須以 / 開頭
+
+        確保 path_prefix 格式正確，防止無效的 URL 前綴規則。
+        """
+        for rule in self:
+            if rule.page_type != 'dynamic':
+                continue
+            if not rule.path_prefix:
+                raise ValidationError(
+                    _('Dynamic page rules require a URL prefix. Rule: %s',
+                      rule.name)
+                )
+            if not rule.path_prefix.startswith('/'):
+                raise ValidationError(
+                    _('URL prefix must start with /. Rule: %s', rule.name)
+                )
+
+    # ================================================================
     # CRUD 覆寫
     # ================================================================
 
@@ -167,14 +205,16 @@ class WoowWebsiteAuthRule(models.Model):
         return result
 
     def unlink(self):
-        """刪除規則前，還原靜態頁面為公開"""
+        """刪除規則前，還原靜態頁面為公開，並清除快取"""
         static_rules = self.filtered(
             lambda r: r.page_type == 'static' and r.website_page_id
         )
         if static_rules:
             static_rules._reset_website_pages()
+        # 在 super().unlink() 刪除記錄前先取得 model 參照以清除快取
+        RuleModel = self.env['woow.website.auth.rule']
         result = super().unlink()
-        self._clear_rule_cache()
+        RuleModel._clear_rule_cache()
         return result
 
     # ================================================================
@@ -273,8 +313,11 @@ class WoowWebsiteAuthRule(models.Model):
         return result
 
     def _clear_rule_cache(self):
-        """清除規則快取，於規則異動時呼叫"""
-        self.env.registry.clear_cache()
+        """清除規則快取，於規則異動時呼叫
+
+        僅清除本模型的 ormcache，避免影響整個 Odoo 實例的其他快取。
+        """
+        self.env['woow.website.auth.rule'].clear_caches()
 
     # ================================================================
     # Onchange
