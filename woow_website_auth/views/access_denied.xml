@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="access_denied_page" name="Access Denied">
+        <t t-call="website.layout">
+            <div id="wrap" class="container py-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-6 text-center">
+                        <div class="mb-4">
+                            <i class="fa fa-lock" style="font-size: 4rem; color: #6c757d;"/>
+                        </div>
+                        <h1 class="mb-3">存取受限</h1>
+                        <p class="lead text-muted mb-4">
+                            您的帳號目前沒有權限存取此頁面。<br/>
+                            如需開通存取權限，請聯繫管理員。
+                        </p>
+                        <div class="d-flex justify-content-center gap-3">
+                            <a href="/" class="btn btn-primary">
+                                <i class="fa fa-home me-1"/> 返回首頁
+                            </a>
+                            <a href="/web/session/logout" class="btn btn-outline-secondary">
+                                <i class="fa fa-sign-out me-1"/> 登出並切換帳號
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

@@ -23,6 +23,7 @@ _BYPASS_PREFIXES = (
     '/web/assets/',
     '/web/content/',
     '/web/image/',
+    '/website/access-denied',
 )
 
 
@@ -118,9 +119,16 @@ class IrHttp(models.AbstractModel):
         :raises werkzeug.exceptions.Forbidden: 作為未知 deny_action 的安全 fallback
         """
         deny_action = rule['deny_action']
+        user = request.env.user
+        is_logged_in = not user._is_public()
 
         if deny_action == 'redirect_login':
-            # 導向登入頁，帶 redirect 參數以便登入後返回原路徑
+            if is_logged_in:
+                # 用戶已登入但無權限 → 導向存取拒絕頁面，避免重定向循環
+                raise werkzeug.exceptions.HTTPException(
+                    response=request.redirect('/website/access-denied', local=True)
+                )
+            # 未登入 → 導向登入頁，帶 redirect 參數以便登入後返回原路徑
             login_url = '/web/login?redirect=%s' % werkzeug.urls.url_quote(path)
             raise werkzeug.exceptions.HTTPException(
                 response=request.redirect(login_url, local=True)

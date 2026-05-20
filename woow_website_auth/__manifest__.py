@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Woow Website Auth',
-    'version': '18.0.1.1.0',
+    'version': '18.0.1.2.0',
     'category': 'Website',
     'summary': '網站頁面統一存取控制',
     'description': """
@@ -16,6 +16,7 @@
         'security/security.xml',
         'security/ir.model.access.csv',
         'views/website_auth_rule_views.xml',
+        'views/access_denied.xml',
         'views/menu.xml',
     ],
     'installable': True,
