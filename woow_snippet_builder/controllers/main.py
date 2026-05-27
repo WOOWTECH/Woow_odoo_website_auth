@@ -235,11 +235,26 @@ class WoowSnippetController(http.Controller):
         if not label_field or not value_field:
             return {'labels': [], 'datasets': []}
 
+        # Determine whether we should use the record count (when value_field
+        # is 'id' or a non-aggregatable field).  read_group returns the count
+        # under the key ``{groupby_field}_count``.
+        use_count = value_field in ('id', '__count')
+        agg_fields = [] if use_count else [value_field]
+
+        def _extract_value(group, groupby_field):
+            """Get the numeric value from a read_group result dict."""
+            if use_count:
+                # Odoo stores count as {groupby}_count
+                count_key = f'{groupby_field}_count'
+                return group.get(count_key, group.get('__count', 0)) or 0
+            # read_group returns the aggregated value under the field name
+            return group.get(value_field, 0) or 0
+
         if series_field:
             # Multi-series: group by both label and series fields
             try:
                 groups = Model.read_group(
-                    parsed_domain, [value_field],
+                    parsed_domain, agg_fields,
                     [label_field, series_field], lazy=False,
                 )
             except Exception:
@@ -258,7 +273,7 @@ class WoowSnippetController(http.Controller):
                     ser = ser[1] if len(ser) > 1 else ser[0]
                 ser = str(ser) if ser else ''
 
-                val = g.get(value_field, 0) or 0
+                val = _extract_value(g, label_field)
 
                 if lbl not in label_set:
                     label_set.append(lbl)
@@ -280,7 +295,7 @@ class WoowSnippetController(http.Controller):
         else:
             # Single series
             try:
-                groups = Model.read_group(parsed_domain, [value_field],
+                groups = Model.read_group(parsed_domain, agg_fields,
                                           [label_field])
             except Exception:
                 groups = []
@@ -292,7 +307,7 @@ class WoowSnippetController(http.Controller):
                 if isinstance(lbl, (list, tuple)):
                     lbl = lbl[1] if len(lbl) > 1 else lbl[0]
                 labels.append(str(lbl) if lbl else '')
-                data.append(g.get(value_field, 0) or 0)
+                data.append(_extract_value(g, label_field))
 
             return {
                 'labels': labels,
