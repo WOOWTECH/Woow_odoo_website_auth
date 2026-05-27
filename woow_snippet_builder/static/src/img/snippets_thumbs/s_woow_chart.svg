@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="60" viewBox="0 0 80 60">
+  <rect width="80" height="60" rx="4" fill="#fef3c7"/>
+  <rect x="12" y="32" width="10" height="18" rx="2" fill="#F59E0B" opacity="0.6"/>
+  <rect x="25" y="18" width="10" height="32" rx="2" fill="#F59E0B" opacity="0.8"/>
+  <rect x="38" y="24" width="10" height="26" rx="2" fill="#F59E0B" opacity="0.7"/>
+  <rect x="51" y="12" width="10" height="38" rx="2" fill="#F59E0B" opacity="0.9"/>
+  <rect x="64" y="28" width="10" height="22" rx="2" fill="#F59E0B" opacity="0.5"/>
+  <line x1="8" y1="50" x2="76" y2="50" stroke="#F59E0B" stroke-width="1" opacity="0.4"/>
+  <text x="40" y="10" text-anchor="middle" font-family="sans-serif" font-size="7" fill="#92400e">Chart</text>
+</svg>

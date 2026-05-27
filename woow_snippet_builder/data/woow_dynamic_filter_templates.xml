@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================
+         WoOW Dynamic Content QWeb Templates
+         All templates use generic keys: field_0, field_1, field_2, image
+         so they work with any model via the woow_generic_mapping context.
+         ============================================================ -->
+
+    <!-- Card Theme -->
+    <template id="dynamic_filter_template_woow_card" name="WoOW Card">
+        <t t-foreach="records" t-as="data"
+           data-number-of-elements="4"
+           data-number-of-elements-sm="1"
+           data-thumb="/woow_snippet_builder/static/src/img/snippets_thumbs/s_woow_dynamic_content.svg">
+            <div class="card h-100 shadow-sm border-0">
+                <img t-if="data.get('image')" class="card-img-top"
+                     style="height:180px; object-fit:cover;"
+                     t-att-src="data['image']" alt="cover"
+                     loading="lazy"/>
+                <div class="card-body">
+                    <h5 class="card-title mb-1" t-out="data.get('field_0', '')"/>
+                    <p class="card-text text-muted small mb-1" t-out="data.get('field_1', '')"/>
+                    <p t-if="data.get('field_2')" class="card-text small"
+                       t-out="data.get('field_2', '')"/>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- List Theme -->
+    <template id="dynamic_filter_template_woow_list" name="WoOW List">
+        <t t-foreach="records" t-as="data"
+           data-number-of-elements="1"
+           data-number-of-elements-sm="1"
+           data-thumb="/woow_snippet_builder/static/src/img/snippets_thumbs/s_woow_dynamic_content.svg">
+            <div class="d-flex flex-wrap align-items-center p-2 border-bottom">
+                <img t-if="data.get('image')"
+                     class="rounded-circle me-3 flex-shrink-0"
+                     style="width:36px; height:36px; object-fit:cover;"
+                     t-att-src="data['image']" alt="avatar"
+                     loading="lazy"/>
+                <span class="fw-bold me-3" t-out="data.get('field_0', '')"/>
+                <span class="text-muted small me-3" t-out="data.get('field_1', '')"/>
+                <span t-if="data.get('field_2')" class="text-muted small"
+                      t-out="data.get('field_2', '')"/>
+            </div>
+        </t>
+    </template>
+
+    <!-- Hero Card Theme -->
+    <template id="dynamic_filter_template_woow_hero" name="WoOW Hero Card">
+        <t t-foreach="records" t-as="data"
+           data-number-of-elements="3"
+           data-number-of-elements-sm="1"
+           data-thumb="/woow_snippet_builder/static/src/img/snippets_thumbs/s_woow_dynamic_content.svg">
+            <div class="card h-100 shadow border-0 overflow-hidden">
+                <div class="position-relative">
+                    <img t-if="data.get('image')" class="card-img-top"
+                         style="height:200px; object-fit:cover;"
+                         t-att-src="data['image']" alt="cover"
+                         loading="lazy"/>
+                    <div class="position-absolute bottom-0 start-0 end-0 p-3"
+                         style="background: linear-gradient(transparent, rgba(0,0,0,0.7));">
+                        <h4 class="text-white mb-0" t-out="data.get('field_0', '')"/>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted small mb-0" t-out="data.get('field_1', '')"/>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Compact Theme -->
+    <template id="dynamic_filter_template_woow_compact" name="WoOW Compact">
+        <t t-foreach="records" t-as="data"
+           data-number-of-elements="1"
+           data-number-of-elements-sm="1"
+           data-thumb="/woow_snippet_builder/static/src/img/snippets_thumbs/s_woow_dynamic_content.svg">
+            <div class="d-flex align-items-center p-2 border-bottom">
+                <img t-if="data.get('image')"
+                     class="rounded-circle me-3 flex-shrink-0"
+                     style="width:40px; height:40px; object-fit:cover;"
+                     t-att-src="data['image']" alt="avatar"
+                     loading="lazy"/>
+                <div class="flex-grow-1 min-w-0">
+                    <div class="fw-bold text-truncate" t-out="data.get('field_0', '')"/>
+                    <div class="text-muted small text-truncate" t-out="data.get('field_1', '')"/>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Table Theme -->
+    <template id="dynamic_filter_template_woow_table" name="WoOW Table">
+        <t t-foreach="records" t-as="data"
+           data-number-of-elements="1"
+           data-number-of-elements-sm="1"
+           data-thumb="/woow_snippet_builder/static/src/img/snippets_thumbs/s_woow_dynamic_content.svg">
+            <div class="d-flex align-items-center py-2 border-bottom small">
+                <div class="col-4 fw-bold text-truncate pe-2"
+                     t-out="data.get('field_0', '')"/>
+                <div class="col-4 text-muted text-truncate pe-2"
+                     t-out="data.get('field_1', '')"/>
+                <div class="col-4 text-muted text-truncate d-none d-md-block"
+                     t-out="data.get('field_2', '')"/>
+            </div>
+        </t>
+    </template>
+
+    <!-- Timeline Theme -->
+    <template id="dynamic_filter_template_woow_timeline" name="WoOW Timeline">
+        <t t-foreach="records" t-as="data"
+           data-number-of-elements="1"
+           data-number-of-elements-sm="1"
+           data-thumb="/woow_snippet_builder/static/src/img/snippets_thumbs/s_woow_dynamic_content.svg">
+            <div class="d-flex mb-3">
+                <div class="flex-shrink-0 me-3 text-center" style="width:60px;">
+                    <div class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center text-white"
+                         style="width:32px; height:32px; font-size:14px;">
+                        <t t-out="data_index + 1"/>
+                    </div>
+                </div>
+                <div class="flex-grow-1 pb-3 border-bottom">
+                    <div class="fw-bold" t-out="data.get('field_0', '')"/>
+                    <div class="text-muted small" t-out="data.get('field_1', '')"/>
+                    <div t-if="data.get('field_2')" class="text-muted small mt-1"
+                         t-out="data.get('field_2', '')"/>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

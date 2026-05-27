@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- Demo ir.filters record for res.partner -->
+    <record id="woow_filter_partners" model="ir.filters">
+        <field name="name">All Contacts</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="domain">[('is_company', '=', False)]</field>
+        <field name="sort">["name asc"]</field>
+        <field name="context">{}</field>
+        <field name="is_default" eval="False"/>
+    </record>
+
+    <record id="woow_snippet_filter_partners" model="website.snippet.filter">
+        <field name="name">Contacts</field>
+        <field name="filter_id" ref="woow_filter_partners"/>
+        <field name="field_names">name,email,city,image_128</field>
+        <field name="limit" eval="16"/>
+        <field name="website_id" eval="False"/>
+    </record>
+
+    <!-- Demo ir.filters record for res.company -->
+    <record id="woow_filter_companies" model="ir.filters">
+        <field name="name">All Companies</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="domain">[('is_company', '=', True)]</field>
+        <field name="sort">["name asc"]</field>
+        <field name="context">{}</field>
+        <field name="is_default" eval="False"/>
+    </record>
+
+    <record id="woow_snippet_filter_companies" model="website.snippet.filter">
+        <field name="name">Companies</field>
+        <field name="filter_id" ref="woow_filter_companies"/>
+        <field name="field_names">name,email,city,image_128</field>
+        <field name="limit" eval="16"/>
+        <field name="website_id" eval="False"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Chart snippet body -->
+    <template id="s_woow_chart" name="WoOW Chart">
+        <section class="s_woow_chart pt32 pb32"
+                 data-snippet="s_woow_chart"
+                 data-name="Chart"
+                 data-model-name=""
+                 data-chart-type="bar"
+                 data-label-field=""
+                 data-value-field=""
+                 data-domain="[]"
+                 data-gauge-max="100"
+                 data-series-field="">
+            <div class="container">
+                <div class="woow_chart_content" style="position:relative; height:400px;">
+                    <div class="text-center text-muted py-5">
+                        <i class="fa fa-pie-chart fa-3x mb-2 d-block opacity-50"/>
+                        Configure this chart in the Customize panel →
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <!-- CUSTOMIZE panel options -->
+    <template id="s_woow_chart_options"
+              inherit_id="website.snippet_options">
+        <xpath expr="." position="inside">
+            <div data-js="woow_chart"
+                 data-selector=".s_woow_chart"
+                 data-no-preview="true">
+                <we-select string="Model"
+                           data-name="model_opt"
+                           data-attribute-name="modelName"
+                           data-no-preview="true">
+                    <we-button data-select-data-attribute="">— Select —</we-button>
+                </we-select>
+                <we-select string="Chart Type"
+                           data-attribute-name="chartType"
+                           data-no-preview="true">
+                    <we-button data-select-data-attribute="bar">Bar</we-button>
+                    <we-button data-select-data-attribute="line">Line</we-button>
+                    <we-button data-select-data-attribute="pie">Pie</we-button>
+                    <we-button data-select-data-attribute="doughnut">Doughnut</we-button>
+                    <we-button data-select-data-attribute="radar">Radar</we-button>
+                    <we-button data-select-data-attribute="polarArea">Polar Area</we-button>
+                    <we-button data-select-data-attribute="bar_horizontal">Horizontal Bar</we-button>
+                    <we-button data-select-data-attribute="bar_stacked">Stacked Bar</we-button>
+                    <we-button data-select-data-attribute="gauge">Gauge</we-button>
+                    <we-button data-select-data-attribute="funnel">Funnel</we-button>
+                </we-select>
+                <we-select string="Label Field"
+                           data-name="label_field_opt"
+                           data-attribute-name="labelField"
+                           data-no-preview="true">
+                    <we-button data-select-data-attribute="">— Select —</we-button>
+                </we-select>
+                <we-select string="Value Field"
+                           data-name="value_field_opt"
+                           data-attribute-name="valueField"
+                           data-no-preview="true">
+                    <we-button data-select-data-attribute="">— Select —</we-button>
+                </we-select>
+                <we-select string="Series Field"
+                           data-name="series_field_opt"
+                           data-attribute-name="seriesField"
+                           data-no-preview="true">
+                    <we-button data-select-data-attribute="">None</we-button>
+                </we-select>
+                <we-input string="Gauge Max"
+                          data-attribute-name="gaugeMax"
+                          data-no-preview="true"/>
+                <we-input string="Domain"
+                          data-attribute-name="domain"
+                          data-no-preview="true"/>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

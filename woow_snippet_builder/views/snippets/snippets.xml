@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Register the WoOW Dynamic snippet group in the BLOCKS panel -->
+    <template id="snippets" inherit_id="website.snippets">
+        <xpath expr="//t[@id='installed_snippets_hook']" position="after">
+            <t snippet-group="woow_dynamic"
+               t-snippet="website.s_snippet_group"
+               string="WoOW Dynamic"
+               t-thumbnail="/woow_snippet_builder/static/src/img/snippets_thumbs/s_woow_dynamic_content.svg"/>
+        </xpath>
+    </template>
+
+    <!-- Register the 4 snippet blocks into the group -->
+    <template id="woow_snippets_list" inherit_id="website.snippets">
+        <xpath expr="//t[@snippet-group='woow_dynamic']" position="after">
+            <t t-snippet="woow_snippet_builder.s_woow_dynamic_content"
+               string="Dynamic Content"
+               group="woow_dynamic"
+               t-thumbnail="/woow_snippet_builder/static/src/img/snippets_thumbs/s_woow_dynamic_content.svg">
+                <keywords>woow, dynamic, content, data, records, list, card</keywords>
+            </t>
+            <t t-snippet="woow_snippet_builder.s_woow_stat"
+               string="Stat Card"
+               group="woow_dynamic"
+               t-thumbnail="/woow_snippet_builder/static/src/img/snippets_thumbs/s_woow_stat.svg">
+                <keywords>woow, stat, card, counter, kpi, metric, number</keywords>
+            </t>
+            <t t-snippet="woow_snippet_builder.s_woow_chart"
+               string="Chart"
+               group="woow_dynamic"
+               t-thumbnail="/woow_snippet_builder/static/src/img/snippets_thumbs/s_woow_chart.svg">
+                <keywords>woow, chart, graph, bar, line, pie, doughnut, radar</keywords>
+            </t>
+            <t t-snippet="woow_snippet_builder.s_woow_data_table"
+               string="Data Table"
+               group="woow_dynamic"
+               t-thumbnail="/woow_snippet_builder/static/src/img/snippets_thumbs/s_woow_data_table.svg">
+                <keywords>woow, table, data, grid, list, paginated</keywords>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

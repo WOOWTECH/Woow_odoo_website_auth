@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Dynamic Content snippet body -->
+    <template id="s_woow_dynamic_content" name="WoOW Dynamic Content">
+        <t t-call="website.s_dynamic_snippet_template">
+            <t t-set="snippet_name" t-value="'s_woow_dynamic_content'"/>
+        </t>
+    </template>
+
+    <!-- CUSTOMIZE panel options (inherit native dynamic snippet options) -->
+    <template id="s_woow_dynamic_content_options"
+              inherit_id="website.snippet_options">
+        <xpath expr="." position="inside">
+            <t t-call="website.s_dynamic_snippet_options_template">
+                <t t-set="snippet_name" t-value="'woow_dynamic_content'"/>
+                <t t-set="snippet_selector" t-value="'.s_woow_dynamic_content'"/>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

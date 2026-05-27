@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Stat Card snippet body -->
+    <template id="s_woow_stat" name="WoOW Stat Card">
+        <section class="s_woow_stat pt32 pb32"
+                 data-snippet="s_woow_stat"
+                 data-name="Stat Card"
+                 data-model-name=""
+                 data-operation="count"
+                 data-stat-field=""
+                 data-group-by=""
+                 data-domain="[]"
+                 data-sub-type="default"
+                 data-target-value="100"
+                 data-threshold-warning="50"
+                 data-threshold-danger="25"
+                 data-previous-value="0">
+            <div class="container">
+                <div class="woow_stat_content text-center text-muted py-4">
+                    <i class="fa fa-bar-chart fa-3x mb-2 d-block opacity-50"/>
+                    Configure this stat card in the Customize panel →
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <!-- CUSTOMIZE panel options -->
+    <template id="s_woow_stat_options"
+              inherit_id="website.snippet_options">
+        <xpath expr="." position="inside">
+            <div data-js="woow_stat"
+                 data-selector=".s_woow_stat"
+                 data-no-preview="true">
+                <we-select string="Model"
+                           data-name="model_opt"
+                           data-attribute-name="modelName"
+                           data-no-preview="true">
+                    <we-button data-select-data-attribute="">— Select —</we-button>
+                </we-select>
+                <we-select string="Operation"
+                           data-attribute-name="operation"
+                           data-no-preview="true">
+                    <we-button data-select-data-attribute="count">Count</we-button>
+                    <we-button data-select-data-attribute="sum">Sum</we-button>
+                    <we-button data-select-data-attribute="avg">Average</we-button>
+                    <we-button data-select-data-attribute="min">Min</we-button>
+                    <we-button data-select-data-attribute="max">Max</we-button>
+                    <we-button data-select-data-attribute="count_distinct">Count Distinct</we-button>
+                </we-select>
+                <we-select string="Field"
+                           data-name="field_opt"
+                           data-attribute-name="statField"
+                           data-no-preview="true">
+                    <we-button data-select-data-attribute="">— Select —</we-button>
+                </we-select>
+                <we-select string="Group By"
+                           data-name="group_by_opt"
+                           data-attribute-name="groupBy"
+                           data-no-preview="true">
+                    <we-button data-select-data-attribute="">None</we-button>
+                </we-select>
+                <we-select string="Style"
+                           data-attribute-name="subType"
+                           data-no-preview="true">
+                    <we-button data-select-data-attribute="default">Default</we-button>
+                    <we-button data-select-data-attribute="progress">Progress Bar</we-button>
+                    <we-button data-select-data-attribute="trend">Trend (Delta)</we-button>
+                    <we-button data-select-data-attribute="threshold">Threshold</we-button>
+                </we-select>
+                <we-input string="Target Value"
+                          data-attribute-name="targetValue"
+                          data-no-preview="true"/>
+                <we-input string="Previous Value"
+                          data-attribute-name="previousValue"
+                          data-no-preview="true"/>
+                <we-input string="Domain"
+                          data-attribute-name="domain"
+                          data-no-preview="true"/>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

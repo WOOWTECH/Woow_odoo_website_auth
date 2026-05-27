@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="60" viewBox="0 0 80 60">
+  <rect width="80" height="60" rx="4" fill="#f0fdf4"/>
+  <rect x="8" y="6" width="64" height="48" rx="6" fill="white" stroke="#10B981" stroke-width="1.5" opacity="0.9"/>
+  <text x="40" y="28" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="bold" fill="#10B981">1,234</text>
+  <text x="40" y="40" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#6b7280">Total Records</text>
+  <rect x="20" y="46" width="40" height="4" rx="2" fill="#e5e7eb"/>
+  <rect x="20" y="46" width="28" height="4" rx="2" fill="#10B981" opacity="0.7"/>
+</svg>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Data Table snippet body -->
+    <template id="s_woow_data_table" name="WoOW Data Table">
+        <section class="s_woow_data_table pt32 pb32"
+                 data-snippet="s_woow_data_table"
+                 data-name="Data Table"
+                 data-model-name=""
+                 data-field-names=""
+                 data-domain="[]"
+                 data-page-size="25"
+                 data-searchable="1"
+                 data-sortable="1">
+            <div class="container">
+                <div class="woow_data_table_content text-center text-muted py-4">
+                    <i class="fa fa-table fa-3x mb-2 d-block opacity-50"/>
+                    Configure this data table in the Customize panel →
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <!-- CUSTOMIZE panel options -->
+    <template id="s_woow_data_table_options"
+              inherit_id="website.snippet_options">
+        <xpath expr="." position="inside">
+            <div data-js="woow_data_table"
+                 data-selector=".s_woow_data_table"
+                 data-no-preview="true">
+                <we-select string="Model"
+                           data-name="model_opt"
+                           data-attribute-name="modelName"
+                           data-no-preview="true">
+                    <we-button data-select-data-attribute="">— Select —</we-button>
+                </we-select>
+                <we-input string="Fields (comma-sep)"
+                          data-name="fields_opt"
+                          data-attribute-name="fieldNames"
+                          data-no-preview="true"
+                          placeholder="name,email,city"/>
+                <we-select string="Page Size"
+                           data-attribute-name="pageSize"
+                           data-no-preview="true">
+                    <we-button data-select-data-attribute="10">10</we-button>
+                    <we-button data-select-data-attribute="25">25</we-button>
+                    <we-button data-select-data-attribute="50">50</we-button>
+                    <we-button data-select-data-attribute="100">100</we-button>
+                </we-select>
+                <we-select string="Searchable"
+                           data-attribute-name="searchable"
+                           data-no-preview="true">
+                    <we-button data-select-data-attribute="1">Yes</we-button>
+                    <we-button data-select-data-attribute="0">No</we-button>
+                </we-select>
+                <we-select string="Sortable"
+                           data-attribute-name="sortable"
+                           data-no-preview="true">
+                    <we-button data-select-data-attribute="1">Yes</we-button>
+                    <we-button data-select-data-attribute="0">No</we-button>
+                </we-select>
+                <we-input string="Domain"
+                          data-attribute-name="domain"
+                          data-no-preview="true"/>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>
