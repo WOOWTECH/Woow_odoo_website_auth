@@ -80,17 +80,22 @@ class ResPartner(models.Model):
         """將 partner 對應的用戶降級為純 Portal
 
         移除所有 membership group（Silver、Gold），
-        回到純 Portal 狀態。
+        並明確確保 Portal group 被保留（避免 implied_ids
+        反向移除後失去 Portal 存取權）。
         僅限 internal user 以上權限呼叫。
 
         :raises AccessError: portal/public user 呼叫時拋出
         """
         self._check_membership_manager()
         membership_groups = self._get_membership_groups()
+        portal_group = self.env.ref('base.group_portal')
         for partner in self:
             users = partner.user_ids
             if not users:
                 continue
+            cmds = [(3, g.id) for g in membership_groups]
+            # 明確確保 Portal group 被保留
+            cmds.append((4, portal_group.id))
             users.sudo().write({
-                'groups_id': [(3, g.id) for g in membership_groups],
+                'groups_id': cmds,
             })
