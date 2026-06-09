@@ -15,15 +15,18 @@ from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
-# 不應被攔截的路徑前綴（後台、靜態資源、登入頁等）
+# 不應被攔截的路徑前綴（後台、靜態資源、SEO、登入頁等）
 _BYPASS_PREFIXES = (
     '/web/',
     '/website/translations',
+    '/website/action/',
     '/web/static/',
     '/web/assets/',
     '/web/content/',
     '/web/image/',
     '/website/access-denied',
+    '/sitemap',
+    '/_service_worker',
 )
 
 
@@ -59,7 +62,10 @@ class IrHttp(models.AbstractModel):
 
         for rule in rules:
             prefix = rule['path_prefix']
-            if not prefix or not path.startswith(prefix):
+            if not prefix:
+                continue
+            # 邊界感知比對：/app 只匹配 /app 和 /app/...，不匹配 /application
+            if path != prefix and not path.startswith(prefix + '/'):
                 continue
 
             # 命中規則，檢查權限
@@ -135,8 +141,16 @@ class IrHttp(models.AbstractModel):
             )
 
         elif deny_action == 'redirect_custom':
-            # 導向自訂 URL
+            # 導向自訂 URL（含防無限迴圈保護）
             redirect_url = rule.get('redirect_url', '/')
+            if redirect_url and path.startswith(redirect_url):
+                # 防止迴圈：若目標路徑也被當前規則覆蓋，直接 403
+                _logger.warning(
+                    'woow_website_auth: redirect loop detected for rule %s '
+                    '(path=%s, redirect=%s), returning 403',
+                    rule.get('id'), path, redirect_url,
+                )
+                raise werkzeug.exceptions.Forbidden()
             raise werkzeug.exceptions.HTTPException(
                 response=request.redirect(redirect_url, local=True)
             )

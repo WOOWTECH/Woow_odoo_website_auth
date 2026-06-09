@@ -147,6 +147,36 @@ class WoowWebsiteAuthRule(models.Model):
                       'Rule: %s', rule.name)
                 )
 
+    @api.constrains('page_type', 'website_page_id')
+    def _check_static_page_required(self):
+        """靜態頁面規則必須選擇一個 website.page"""
+        for rule in self:
+            if rule.page_type == 'static' and not rule.website_page_id:
+                raise ValidationError(
+                    _('Static page rules require selecting a page. Rule: %s',
+                      rule.name)
+                )
+
+    @api.constrains('auth_mode', 'group_id')
+    def _check_group_required(self):
+        """auth_mode 為 group 時必須指定 group_id"""
+        for rule in self:
+            if rule.auth_mode == 'group' and not rule.group_id:
+                raise ValidationError(
+                    _('Group auth mode requires selecting a group. Rule: %s',
+                      rule.name)
+                )
+
+    @api.constrains('auth_mode', 'group_ids')
+    def _check_multi_group_required(self):
+        """auth_mode 為 multi_group 時必須至少指定一個 group"""
+        for rule in self:
+            if rule.auth_mode == 'multi_group' and not rule.group_ids:
+                raise ValidationError(
+                    _('Multi-group auth mode requires at least one group. '
+                      'Rule: %s', rule.name)
+                )
+
     @api.constrains('page_type', 'path_prefix')
     def _check_path_prefix(self):
         """動態頁面的 path_prefix 必須以 / 開頭
@@ -245,9 +275,11 @@ class WoowWebsiteAuthRule(models.Model):
                 })
 
     def _reset_website_pages(self):
-        """還原靜態頁面為公開狀態
+        """還原靜態頁面為公開狀態（安全版本）
 
-        將 visibility 設為空字串（公開），並清除 groups_id。
+        檢查同一頁面是否還有其他啟用中的規則：
+        - 若有：重新同步到剩餘規則的設定
+        - 若無：將 visibility 設為空字串（公開），清除 groups_id
         用於規則停用或刪除時。
         """
         for rule in self:
@@ -255,10 +287,24 @@ class WoowWebsiteAuthRule(models.Model):
                 continue
 
             page = rule.website_page_id.sudo()
-            page.write({
-                'visibility': '',
-                'groups_id': [(5, 0, 0)],
-            })
+            # 查詢同一頁面是否還有其他啟用中的規則（排除當前規則）
+            remaining_rule = self.sudo().search([
+                ('id', '!=', rule.id),
+                ('id', 'not in', self.ids),
+                ('page_type', '=', 'static'),
+                ('website_page_id', '=', rule.website_page_id.id),
+                ('active', '=', True),
+            ], order='sequence, id', limit=1)
+
+            if remaining_rule:
+                # 有其他規則存在，重新同步到該規則的設定
+                remaining_rule._sync_website_pages()
+            else:
+                # 無其他規則，還原為公開
+                page.write({
+                    'visibility': '',
+                    'groups_id': [(5, 0, 0)],
+                })
 
     # ================================================================
     # 快取機制
@@ -315,9 +361,9 @@ class WoowWebsiteAuthRule(models.Model):
     def _clear_rule_cache(self):
         """清除規則快取，於規則異動時呼叫
 
-        僅清除本模型的 ormcache，避免影響整個 Odoo 實例的其他快取。
+        使用 registry.clear_cache() 清除 ormcache（Odoo 18 標準做法）。
         """
-        self.env['woow.website.auth.rule'].clear_caches()
+        self.env.registry.clear_cache()
 
     # ================================================================
     # Onchange
