@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Woow Website Auth',
-    'version': '18.0.1.2.0',
+    'version': '18.0.1.3.0',
     'category': 'Website',
     'summary': '網站頁面統一存取控制',
     'description': """

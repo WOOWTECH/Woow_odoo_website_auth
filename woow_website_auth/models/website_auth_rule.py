@@ -59,6 +59,7 @@ class WoowWebsiteAuthRule(models.Model):
         'website.page',
         string='靜態頁面',
         help='選擇要保護的靜態頁面',
+        ondelete='set null',
     )
 
     # ----------------------------------------------------------------
@@ -175,6 +176,15 @@ class WoowWebsiteAuthRule(models.Model):
                 raise ValidationError(
                     _('Multi-group auth mode requires at least one group. '
                       'Rule: %s', rule.name)
+                )
+
+    @api.constrains('deny_action', 'redirect_url')
+    def _check_redirect_url(self):
+        """deny_action 為 redirect_custom 時必須提供 redirect_url"""
+        for rule in self:
+            if rule.deny_action == 'redirect_custom' and not rule.redirect_url:
+                raise ValidationError(
+                    _('Custom redirect requires a URL. Rule: %s', rule.name)
                 )
 
     @api.constrains('page_type', 'path_prefix')

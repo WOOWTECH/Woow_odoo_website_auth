@@ -75,6 +75,46 @@
     </record>
 
     <!-- ============================================================ -->
+    <!-- Search View（搜尋）                                            -->
+    <!-- ============================================================ -->
+    <record id="woow_website_auth_rule_view_search" model="ir.ui.view">
+        <field name="name">woow.website.auth.rule.search</field>
+        <field name="model">woow.website.auth.rule</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="path_prefix"/>
+                <field name="website_page_id"/>
+                <field name="group_id"/>
+                <field name="website_id"/>
+                <separator/>
+                <filter string="動態頁面" name="dynamic"
+                        domain="[('page_type', '=', 'dynamic')]"/>
+                <filter string="靜態頁面" name="static"
+                        domain="[('page_type', '=', 'static')]"/>
+                <separator/>
+                <filter string="任何登入用戶" name="signed_in"
+                        domain="[('auth_mode', '=', 'signed_in')]"/>
+                <filter string="指定群組" name="group"
+                        domain="[('auth_mode', '=', 'group')]"/>
+                <filter string="多群組" name="multi_group"
+                        domain="[('auth_mode', '=', 'multi_group')]"/>
+                <separator/>
+                <filter string="已封存" name="inactive"
+                        domain="[('active', '=', False)]"/>
+                <group expand="0" string="分組">
+                    <filter string="頁面類型" name="group_page_type"
+                            context="{'group_by': 'page_type'}"/>
+                    <filter string="驗證模式" name="group_auth_mode"
+                            context="{'group_by': 'auth_mode'}"/>
+                    <filter string="網站" name="group_website"
+                            context="{'group_by': 'website_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
     <!-- Action                                                        -->
     <!-- ============================================================ -->
     <record id="woow_website_auth_rule_action" model="ir.actions.act_window">
