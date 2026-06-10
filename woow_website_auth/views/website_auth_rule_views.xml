@@ -69,6 +69,13 @@
                                    required="deny_action == 'redirect_custom'"/>
                         </group>
                     </group>
+                    <group>
+                        <group string="選單隱藏" colspan="2">
+                            <field name="menu_ids" widget="many2many_tags"
+                                   options="{'no_create': True}"
+                                   domain="[('website_id', 'in', [website_id, False])]"/>
+                        </group>
+                    </group>
                 </sheet>
             </form>
         </field>
@@ -99,6 +106,9 @@
                         domain="[('auth_mode', '=', 'group')]"/>
                 <filter string="多群組" name="multi_group"
                         domain="[('auth_mode', '=', 'multi_group')]"/>
+                <separator/>
+                <filter string="有選單隱藏" name="has_menu"
+                        domain="[('menu_ids', '!=', False)]"/>
                 <separator/>
                 <filter string="已封存" name="inactive"
                         domain="[('active', '=', False)]"/>

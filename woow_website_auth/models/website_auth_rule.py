@@ -115,6 +115,18 @@ class WoowWebsiteAuthRule(models.Model):
         help='deny_action 為「導向自訂 URL」時使用，例如 /membership/upgrade',
     )
 
+    # ----------------------------------------------------------------
+    # 選單隱藏
+    # ----------------------------------------------------------------
+    menu_ids = fields.Many2many(
+        'website.menu',
+        'woow_website_auth_rule_menu_rel',
+        'rule_id',
+        'menu_id',
+        string='隱藏的選單',
+        help='當使用者不符合此規則的驗證條件時，這些選單會被隱藏',
+    )
+
     # ================================================================
     # Computed Fields
     # ================================================================
@@ -212,45 +224,73 @@ class WoowWebsiteAuthRule(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        """建立規則後，同步靜態頁面並清除快取"""
+        """建立規則後，同步靜態頁面、選單可見性並清除快取"""
         records = super().create(vals_list)
         records._sync_website_pages()
+        records._sync_menu_visibility()
         self._clear_rule_cache()
         return records
 
     def write(self, vals):
-        """更新規則時處理靜態頁面同步與快取清除
+        """更新規則時處理靜態頁面同步、選單同步與快取清除
 
-        特別處理：當 active 從 True 變為 False 時，還原靜態頁面為公開。
+        特別處理：
+        - 當 active 從 True 變為 False 時，還原靜態頁面與選單為公開
+        - 當 menu_ids 變更時，先清理被移除的舊選單 group_ids
         """
-        # 檢查是否有規則從啟用變為停用
-        deactivating_static_rules = self.env['woow.website.auth.rule']
+        # 在 super().write() 前捕獲舊狀態，避免被覆蓋
+        deactivating_rules = self.env['woow.website.auth.rule']
         if 'active' in vals and not vals['active']:
-            deactivating_static_rules = self.filtered(
-                lambda r: r.active and r.page_type == 'static' and r.website_page_id
-            )
+            deactivating_rules = self.filtered(lambda r: r.active)
+
+        # 捕獲舊的 menu_ids（在 super().write() 前），用於清理被移除的選單
+        old_menu_map = {}
+        if 'menu_ids' in vals or 'active' in vals:
+            for rule in self:
+                old_menu_map[rule.id] = rule.menu_ids
 
         result = super().write(vals)
 
-        # 停用的靜態規則：還原頁面為公開
-        if deactivating_static_rules:
-            deactivating_static_rules._reset_website_pages()
+        # 停用的規則：還原頁面與選單為公開（使用舊 menu_ids）
+        if deactivating_rules:
+            deactivating_static = deactivating_rules.filtered(
+                lambda r: r.page_type == 'static' and r.website_page_id
+            )
+            if deactivating_static:
+                deactivating_static._reset_website_pages()
+            # 使用 old_menu_map 進行還原，因為 super().write() 可能已清除 menu_ids
+            for rule in deactivating_rules:
+                old_menus = old_menu_map.get(rule.id, rule.menu_ids)
+                if old_menus:
+                    self._reset_menus_for_rule(rule, old_menus)
+
+        # menu_ids 變更時：清理被移除的舊選單
+        if 'menu_ids' in vals:
+            for rule in self.filtered(lambda r: r.active):
+                old_menus = old_menu_map.get(rule.id, self.env['website.menu'])
+                removed_menus = old_menus - rule.menu_ids
+                if removed_menus:
+                    self._reset_menus_for_rule(rule, removed_menus)
 
         # 仍然啟用的規則：正常同步
         active_rules = self.filtered(lambda r: r.active)
         if active_rules:
             active_rules._sync_website_pages()
+            active_rules._sync_menu_visibility()
 
         self._clear_rule_cache()
         return result
 
     def unlink(self):
-        """刪除規則前，還原靜態頁面為公開，並清除快取"""
+        """刪除規則前，還原靜態頁面與選單為公開，並清除快取"""
         static_rules = self.filtered(
             lambda r: r.page_type == 'static' and r.website_page_id
         )
         if static_rules:
             static_rules._reset_website_pages()
+        menu_rules = self.filtered(lambda r: r.menu_ids)
+        if menu_rules:
+            menu_rules._reset_menu_visibility()
         # 在 super().unlink() 刪除記錄前先取得 model 參照以清除快取
         RuleModel = self.env['woow.website.auth.rule']
         result = super().unlink()
@@ -283,6 +323,129 @@ class WoowWebsiteAuthRule(models.Model):
                     'visibility': 'restricted_group',
                     'groups_id': [(6, 0, [rule.group_id.id])],
                 })
+
+    def _sync_menu_visibility(self):
+        """將規則的群組同步到關聯選單的 group_ids
+
+        同步方向：rule → website.menu.group_ids（單向）
+        - auth_mode = signed_in → portal + internal user 群組
+        - auth_mode = group → 指定的單一群組
+        - auth_mode = multi_group → 指定的多個群組
+        - 規則未啟用或無關聯選單 → 不處理
+
+        所有情況均會自動包含 website.group_website_designer，
+        確保網站設計者始終可以看到所有選單。
+
+        注意：Odoo 18 的 website.menu.write() 只支援 LINK (4) / UNLINK (3) 命令，
+        不支援 SET (6) / CLEAR (5) 的 3-tuple 格式。
+        """
+        # 在迴圈外取得常用群組引用，避免重複查詢
+        portal_group = self.env.ref('base.group_portal')
+        internal_group = self.env.ref('base.group_user')
+        designer_group = self.env.ref('website.group_website_designer')
+
+        for rule in self:
+            if not rule.menu_ids:
+                continue
+            menus = rule.menu_ids.sudo()
+            if not rule.active:
+                self._menu_replace_groups(menus, [])
+                continue
+            if rule.auth_mode == 'signed_in':
+                group_list = [portal_group.id, internal_group.id, designer_group.id]
+            elif rule.auth_mode == 'group' and rule.group_id:
+                group_list = [rule.group_id.id, designer_group.id]
+            elif rule.auth_mode == 'multi_group' and rule.group_ids:
+                group_list = rule.group_ids.ids + [designer_group.id]
+            else:
+                continue
+            self._menu_replace_groups(menus, group_list)
+
+    @api.model
+    def _menu_replace_groups(self, menus, new_group_ids):
+        """替換選單的 group_ids，相容 Odoo 18 website.menu.write()
+
+        Odoo 18 的 website.menu.write() 會迭代 group_ids 命令時
+        以 ``for command, record_id in commands`` 解包，僅支援 2-tuple
+        的 LINK (4, id) 和 UNLINK (3, id)。不支援 3-tuple 的 SET (6)
+        和 CLEAR (5)。
+
+        本方法先用 UNLINK 移除所有現有群組，再用 LINK 加入新群組，
+        確保與 Odoo 18 原生 website.menu 相容。
+
+        :param menus: website.menu recordset
+        :param new_group_ids: list of int, 新的群組 ID 列表（空列表代表清除）
+        """
+        for menu in menus:
+            commands = []
+            # 先 UNLINK 所有現有群組
+            for gid in menu.group_ids.ids:
+                commands.append((3, gid))
+            # 再 LINK 新群組
+            for gid in new_group_ids:
+                commands.append((4, gid))
+            if commands:
+                menu.write({'group_ids': commands})
+
+    def _reset_menus_for_rule(self, rule, menus):
+        """還原指定選單的 group_ids（用於 write() 中停用或移除選單時）
+
+        接受外部傳入的 menus recordset，不依賴 rule.menu_ids（可能已被
+        super().write() 更新）。使用批次查詢減少資料庫查詢次數。
+
+        :param rule: 單一 woow.website.auth.rule 記錄
+        :param menus: website.menu recordset，要重置的選單
+        """
+        self._reset_menus_batch(menus, exclude_rule_ids=self.ids)
+
+    def _reset_menu_visibility(self):
+        """還原關聯選單為公開（清除 group_ids）
+
+        收集所有受影響的選單，使用批次查詢檢查是否有其他規則保護：
+        - 若有：重新同步到剩餘規則的設定
+        - 若無：清除 group_ids（所有人可見）
+        """
+        all_menus = self.env['website.menu']
+        for rule in self:
+            if rule.menu_ids:
+                all_menus |= rule.menu_ids
+        if all_menus:
+            self._reset_menus_batch(all_menus, exclude_rule_ids=self.ids)
+
+    def _reset_menus_batch(self, menus, exclude_rule_ids):
+        """批次還原選單的 group_ids
+
+        用單次查詢找出所有仍然保護這些選單的啟用規則，
+        取代原本的 N*M 逐一查詢。
+
+        :param menus: website.menu recordset
+        :param exclude_rule_ids: 要排除的規則 ID 列表
+        """
+        # 批次查詢：找出所有仍然保護這些選單的啟用規則
+        remaining_rules = self.sudo().search([
+            ('id', 'not in', exclude_rule_ids),
+            ('menu_ids', 'in', menus.ids),
+            ('active', '=', True),
+        ], order='sequence, id')
+
+        # 建立 menu_id → 最高優先序規則 的映射
+        menu_to_rule = {}
+        for r in remaining_rules:
+            for m in r.menu_ids:
+                if m.id in menus.ids and m.id not in menu_to_rule:
+                    menu_to_rule[m.id] = r
+
+        # 有剩餘規則的選單：重新同步（去重規則）
+        rules_to_sync = self.env['woow.website.auth.rule']
+        for rule in menu_to_rule.values():
+            rules_to_sync |= rule
+        if rules_to_sync:
+            rules_to_sync._sync_menu_visibility()
+
+        # 無剩餘規則的選單：清除 group_ids
+        orphan_menus = menus.sudo().filtered(lambda m: m.id not in menu_to_rule)
+        if orphan_menus:
+            self._menu_replace_groups(orphan_menus, [])
 
     def _reset_website_pages(self):
         """還原靜態頁面為公開狀態（安全版本）
