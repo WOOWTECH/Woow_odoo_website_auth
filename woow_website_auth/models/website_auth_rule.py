@@ -115,6 +115,23 @@ class WoowWebsiteAuthRule(models.Model):
         help='deny_action 為「導向自訂 URL」時使用，例如 /membership/upgrade',
     )
 
+    # ----------------------------------------------------------------
+    # WELL Building 相關欄位
+    # ----------------------------------------------------------------
+    well_content_type = fields.Selection(
+        [
+            ('none', 'Non-WELL Content'),
+            ('ieq', 'IEQ Dashboard (Air/Thermal/Light/Sound)'),
+            ('survey', 'Occupant Survey (M02)'),
+            ('wellness', 'Wellness Program (C08)'),
+            ('maintenance', 'Maintenance Portal (M08)'),
+            ('booking', 'Space Booking (V08/M06)'),
+        ],
+        string='WELL Content Type',
+        default='none',
+        help='Categorize this access rule by WELL v2 content type for certification tracking',
+    )
+
     # ================================================================
     # Computed Fields
     # ================================================================

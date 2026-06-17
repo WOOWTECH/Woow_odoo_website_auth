@@ -29,5 +29,15 @@
             <field name="comment">金級會員，繼承 Silver 權限（自動包含 Portal）</field>
         </record>
 
+        <!-- ============================================================ -->
+        <!-- WELL Building 住戶等級                                        -->
+        <!-- ============================================================ -->
+        <record id="group_well_occupant" model="res.groups">
+            <field name="name">WELL Building Occupant</field>
+            <field name="category_id" ref="module_category_membership"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_portal'))]"/>
+            <field name="comment">WELL 認證建築住戶，可存取健康環境資訊與問卷</field>
+        </record>
+
     </data>
 </odoo>

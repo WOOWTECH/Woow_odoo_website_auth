@@ -68,6 +68,9 @@
                                    invisible="deny_action != 'redirect_custom'"
                                    required="deny_action == 'redirect_custom'"/>
                         </group>
+                        <group string="WELL Building">
+                            <field name="well_content_type"/>
+                        </group>
                     </group>
                 </sheet>
             </form>
