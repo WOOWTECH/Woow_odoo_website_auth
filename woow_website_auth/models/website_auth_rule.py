@@ -187,6 +187,29 @@ class WoowWebsiteAuthRule(models.Model):
                     _('Custom redirect requires a URL. Rule: %s', rule.name)
                 )
 
+    @api.constrains('redirect_url')
+    def _check_redirect_url_xss(self):
+        """Block dangerous URL schemes to prevent XSS attacks.
+
+        Reject javascript:, data:, and vbscript: URL schemes which could
+        be used for cross-site scripting if rendered in a browser redirect.
+        """
+        _dangerous_schemes = ('javascript:', 'data:', 'vbscript:')
+        for rule in self:
+            if not rule.redirect_url:
+                continue
+            url_lower = rule.redirect_url.strip().lower()
+            # Also handle obfuscation attempts with leading whitespace/control chars
+            url_cleaned = ''.join(url_lower.split())
+            for scheme in _dangerous_schemes:
+                if url_cleaned.startswith(scheme):
+                    raise ValidationError(
+                        _('Redirect URL contains a dangerous scheme '
+                          '(%(scheme)s). Rule: %(rule)s',
+                          scheme=scheme.rstrip(':'),
+                          rule=rule.name)
+                    )
+
     @api.constrains('page_type', 'path_prefix')
     def _check_path_prefix(self):
         """動態頁面的 path_prefix 必須以 / 開頭
