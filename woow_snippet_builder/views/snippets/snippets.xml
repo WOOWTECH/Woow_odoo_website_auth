@@ -7,7 +7,7 @@
             <t snippet-group="woow_dynamic"
                t-snippet="website.s_snippet_group"
                string="WoOW Dynamic"
-               t-thumbnail="/woow_snippet_builder/static/src/img/snippets_thumbs/s_woow_dynamic_content.svg"/>
+               t-thumbnail="/woow_snippet_builder/static/src/img/snippets_thumbs/s_woow_dynamic_content.svg?v=2"/>
         </xpath>
     </template>
 
@@ -17,25 +17,25 @@
             <t t-snippet="woow_snippet_builder.s_woow_dynamic_content"
                string="Dynamic Content"
                group="woow_dynamic"
-               t-thumbnail="/woow_snippet_builder/static/src/img/snippets_thumbs/s_woow_dynamic_content.svg">
+               t-thumbnail="/woow_snippet_builder/static/src/img/snippets_thumbs/s_woow_dynamic_content.svg?v=2">
                 <keywords>woow, dynamic, content, data, records, list, card</keywords>
             </t>
             <t t-snippet="woow_snippet_builder.s_woow_stat"
                string="Stat Card"
                group="woow_dynamic"
-               t-thumbnail="/woow_snippet_builder/static/src/img/snippets_thumbs/s_woow_stat.svg">
+               t-thumbnail="/woow_snippet_builder/static/src/img/snippets_thumbs/s_woow_stat.svg?v=2">
                 <keywords>woow, stat, card, counter, kpi, metric, number</keywords>
             </t>
             <t t-snippet="woow_snippet_builder.s_woow_chart"
                string="Chart"
                group="woow_dynamic"
-               t-thumbnail="/woow_snippet_builder/static/src/img/snippets_thumbs/s_woow_chart.svg">
+               t-thumbnail="/woow_snippet_builder/static/src/img/snippets_thumbs/s_woow_chart.svg?v=2">
                 <keywords>woow, chart, graph, bar, line, pie, doughnut, radar</keywords>
             </t>
             <t t-snippet="woow_snippet_builder.s_woow_data_table"
                string="Data Table"
                group="woow_dynamic"
-               t-thumbnail="/woow_snippet_builder/static/src/img/snippets_thumbs/s_woow_data_table.svg">
+               t-thumbnail="/woow_snippet_builder/static/src/img/snippets_thumbs/s_woow_data_table.svg?v=2">
                 <keywords>woow, table, data, grid, list, paginated</keywords>
             </t>
         </xpath>
