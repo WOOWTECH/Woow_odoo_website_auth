@@ -17,6 +17,7 @@ publicWidget.registry.s_woow_data_table = publicWidget.Widget.extend({
 
     async start() {
         await this._super(...arguments);
+        this._ensureStructure();
         this._currentOffset = 0;
         this._sortField = '';
         this._sortOrder = 'asc';
@@ -63,6 +64,24 @@ publicWidget.registry.s_woow_data_table = publicWidget.Widget.extend({
     // ------------------------------------------------------------------
     // Private
     // ------------------------------------------------------------------
+
+    _ensureStructure() {
+        let content = this.el.querySelector('.woow_data_table_content');
+        if (!content) {
+            const container = document.createElement('div');
+            container.className = 'container';
+            content = document.createElement('div');
+            content.className = 'woow_data_table_content';
+            container.appendChild(content);
+            this.el.innerHTML = '';
+            this.el.appendChild(container);
+        } else if (!content.parentElement.classList.contains('container')) {
+            const container = document.createElement('div');
+            container.className = 'container';
+            content.parentElement.insertBefore(container, content);
+            container.appendChild(content);
+        }
+    },
 
     async _loadAndRender() {
         const ds = this.el.dataset;

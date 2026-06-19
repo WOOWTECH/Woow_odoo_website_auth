@@ -20,6 +20,7 @@ publicWidget.registry.s_woow_chart = publicWidget.Widget.extend({
 
     async start() {
         await this._super(...arguments);
+        this._ensureStructure();
         await this._loadAndRender();
     },
 
@@ -31,6 +32,25 @@ publicWidget.registry.s_woow_chart = publicWidget.Widget.extend({
     // ------------------------------------------------------------------
     // Private
     // ------------------------------------------------------------------
+
+    _ensureStructure() {
+        let content = this.el.querySelector('.woow_chart_content');
+        if (!content) {
+            const container = document.createElement('div');
+            container.className = 'container';
+            content = document.createElement('div');
+            content.className = 'woow_chart_content';
+            content.style.cssText = 'position:relative; height:400px;';
+            container.appendChild(content);
+            this.el.innerHTML = '';
+            this.el.appendChild(container);
+        } else if (!content.parentElement.classList.contains('container')) {
+            const container = document.createElement('div');
+            container.className = 'container';
+            content.parentElement.insertBefore(container, content);
+            container.appendChild(content);
+        }
+    },
 
     async _loadAndRender() {
         const ds = this.el.dataset;

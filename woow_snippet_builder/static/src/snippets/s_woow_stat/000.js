@@ -16,12 +16,33 @@ publicWidget.registry.s_woow_stat = publicWidget.Widget.extend({
      */
     async start() {
         await this._super(...arguments);
+        this._ensureStructure();
         await this._loadAndRender();
     },
 
     // ------------------------------------------------------------------
     // Private
     // ------------------------------------------------------------------
+
+    _ensureStructure() {
+        let content = this.el.querySelector('.woow_stat_content');
+        if (!content) {
+            // Rebuild expected DOM: .container > .woow_stat_content
+            const container = document.createElement('div');
+            container.className = 'container';
+            content = document.createElement('div');
+            content.className = 'woow_stat_content text-center py-3';
+            container.appendChild(content);
+            this.el.innerHTML = '';
+            this.el.appendChild(container);
+        } else if (!content.parentElement.classList.contains('container')) {
+            // Content exists but not wrapped in .container
+            const container = document.createElement('div');
+            container.className = 'container';
+            content.parentElement.insertBefore(container, content);
+            container.appendChild(content);
+        }
+    },
 
     async _loadAndRender() {
         const ds = this.el.dataset;
