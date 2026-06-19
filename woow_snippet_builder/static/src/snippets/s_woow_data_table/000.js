@@ -124,6 +124,12 @@ publicWidget.registry.s_woow_data_table = publicWidget.Widget.extend({
 
         let html = '';
 
+        // Title
+        const title = ds.title || '';
+        if (title) {
+            html += `<h5 class="fw-bold mb-3">${this._escapeHtml(title)}</h5>`;
+        }
+
         // Search bar
         if (searchable) {
             html += `

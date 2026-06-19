@@ -7,6 +7,7 @@ import { rpc } from "@web/core/network/rpc";
  *
  * Dynamically populates Model / Field / Group By selects from the
  * /woow_snippet/available_models and /woow_snippet/model_fields endpoints.
+ * Implements conditional visibility for style-dependent fields.
  */
 options.registry.woow_stat = options.Class.extend({
 
@@ -39,7 +40,8 @@ options.registry.woow_stat = options.Class.extend({
             await this._refreshPublicWidgets();
         }
         if (['operation', 'statField', 'groupBy', 'subType', 'targetValue',
-             'previousValue', 'domain'].includes(params.attributeName)) {
+             'previousValue', 'thresholdWarning', 'thresholdDanger',
+             'domain', 'title', 'refreshInterval'].includes(params.attributeName)) {
             await this._refreshPublicWidgets();
         }
     },
@@ -51,6 +53,17 @@ options.registry.woow_stat = options.Class.extend({
             return;
         }
         await this._super(...arguments);
+    },
+
+    /**
+     * Hide the "Field" select when operation is "count" (no field needed).
+     */
+    _computeWidgetVisibility(widgetName) {
+        if (widgetName === 'field_opt') {
+            const operation = this.$target[0].dataset.operation || 'count';
+            return operation !== 'count';
+        }
+        return this._super(...arguments);
     },
 
     /**
@@ -68,7 +81,7 @@ options.registry.woow_stat = options.Class.extend({
             }
         }
 
-        // Populate field_opt and group_by_opt with numeric-capable fields
+        // Populate field_opt and group_by_opt
         const fieldSelect = uiFragment.querySelector('[data-name="field_opt"]');
         const groupBySelect = uiFragment.querySelector('[data-name="group_by_opt"]');
 

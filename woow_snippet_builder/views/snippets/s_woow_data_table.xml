@@ -11,11 +11,20 @@
                  data-domain="[]"
                  data-page-size="25"
                  data-searchable="1"
-                 data-sortable="1">
+                 data-sortable="1"
+                 data-title=""
+                 data-refresh-interval="0">
             <div class="container">
-                <div class="woow_data_table_content text-center text-muted py-4">
-                    <i class="fa fa-table fa-3x mb-2 d-block opacity-50"/>
-                    Configure this data table in the Customize panel →
+                <div class="woow_data_table_content">
+                    <table class="table table-sm table-hover mb-0">
+                        <thead class="table-light">
+                            <tr><th>Column A</th><th>Column B</th><th>Column C</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td></tr>
+                            <tr><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </section>
@@ -28,17 +37,31 @@
             <div data-js="woow_data_table"
                  data-selector=".s_woow_data_table"
                  data-no-preview="true">
+
+                <!-- ═══ Data Source ═══ -->
+                <we-title>Data Source</we-title>
                 <we-select string="Model"
                            data-name="model_opt"
                            data-attribute-name="modelName"
                            data-no-preview="true">
-                    <we-button data-select-data-attribute="">— Select —</we-button>
+                    <we-button data-select-data-attribute="">— Select Model —</we-button>
                 </we-select>
-                <we-input string="Fields (comma-sep)"
+                <we-input string="Columns"
                           data-name="fields_opt"
                           data-attribute-name="fieldNames"
                           data-no-preview="true"
-                          placeholder="name,email,city"/>
+                          placeholder="name, email, city"/>
+                <we-input string="Filter (Domain)"
+                          data-attribute-name="domain"
+                          data-no-preview="true"
+                          placeholder="e.g. [('active','=',True)]"/>
+
+                <!-- ═══ Table Settings ═══ -->
+                <we-title>Table Settings</we-title>
+                <we-input string="Title"
+                          data-attribute-name="title"
+                          data-no-preview="true"
+                          placeholder="e.g. Customer List"/>
                 <we-select string="Page Size"
                            data-attribute-name="pageSize"
                            data-no-preview="true">
@@ -59,9 +82,17 @@
                     <we-button data-select-data-attribute="1">Yes</we-button>
                     <we-button data-select-data-attribute="0">No</we-button>
                 </we-select>
-                <we-input string="Domain"
-                          data-attribute-name="domain"
-                          data-no-preview="true"/>
+
+                <!-- ═══ Advanced ═══ -->
+                <we-title>Advanced</we-title>
+                <we-select string="Auto Refresh"
+                           data-attribute-name="refreshInterval"
+                           data-no-preview="true">
+                    <we-button data-select-data-attribute="0">Off</we-button>
+                    <we-button data-select-data-attribute="10">Every 10s</we-button>
+                    <we-button data-select-data-attribute="30">Every 30s</we-button>
+                    <we-button data-select-data-attribute="60">Every 60s</we-button>
+                </we-select>
             </div>
         </xpath>
     </template>

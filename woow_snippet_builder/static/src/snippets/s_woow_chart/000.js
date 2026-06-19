@@ -88,6 +88,12 @@ publicWidget.registry.s_woow_chart = publicWidget.Widget.extend({
         const container = this.el.querySelector('.woow_chart_content');
         if (!container) return;
 
+        const ds = this.el.dataset;
+
+        // Apply chart height from data attribute
+        const height = parseInt(ds.chartHeight, 10) || 400;
+        container.style.height = height + 'px';
+
         // Ensure Chart.js is loaded
         if (typeof Chart === 'undefined') {
             await loadJS('/web/static/lib/Chart/Chart.js');
@@ -110,6 +116,27 @@ publicWidget.registry.s_woow_chart = publicWidget.Widget.extend({
             config = this._buildFunnelConfig(result);
         } else {
             config = this._buildStandardConfig(result, chartType);
+        }
+
+        // Apply title from data attribute
+        const title = ds.title || '';
+        if (title) {
+            config.options = config.options || {};
+            config.options.plugins = config.options.plugins || {};
+            config.options.plugins.title = {
+                display: true,
+                text: title,
+                font: { size: 16, weight: 'bold' },
+                padding: { bottom: 12 },
+            };
+        }
+
+        // Apply legend visibility from data attribute
+        const showLegend = ds.showLegend;
+        if (showLegend === '0') {
+            config.options = config.options || {};
+            config.options.plugins = config.options.plugins || {};
+            config.options.plugins.legend = { display: false };
         }
 
         this._chartInstance = new Chart(ctx, config);

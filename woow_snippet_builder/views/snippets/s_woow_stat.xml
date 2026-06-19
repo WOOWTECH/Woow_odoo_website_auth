@@ -15,11 +15,16 @@
                  data-target-value="100"
                  data-threshold-warning="50"
                  data-threshold-danger="25"
-                 data-previous-value="0">
+                 data-previous-value="0"
+                 data-title=""
+                 data-refresh-interval="0">
             <div class="container">
-                <div class="woow_stat_content text-center text-muted py-4">
-                    <i class="fa fa-bar-chart fa-3x mb-2 d-block opacity-50"/>
-                    Configure this stat card in the Customize panel →
+                <div class="woow_stat_content text-center py-3">
+                    <div class="display-4 fw-bold text-primary">—</div>
+                    <div class="text-muted mt-1">Stat Card</div>
+                    <div class="progress mt-3 mx-auto" style="max-width:200px; height:6px;">
+                        <div class="progress-bar bg-primary" style="width:70%"></div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -32,11 +37,14 @@
             <div data-js="woow_stat"
                  data-selector=".s_woow_stat"
                  data-no-preview="true">
+
+                <!-- ═══ Data Source ═══ -->
+                <we-title>Data Source</we-title>
                 <we-select string="Model"
                            data-name="model_opt"
                            data-attribute-name="modelName"
                            data-no-preview="true">
-                    <we-button data-select-data-attribute="">— Select —</we-button>
+                    <we-button data-select-data-attribute="">— Select Model —</we-button>
                 </we-select>
                 <we-select string="Operation"
                            data-attribute-name="operation"
@@ -44,15 +52,15 @@
                     <we-button data-select-data-attribute="count">Count</we-button>
                     <we-button data-select-data-attribute="sum">Sum</we-button>
                     <we-button data-select-data-attribute="avg">Average</we-button>
-                    <we-button data-select-data-attribute="min">Min</we-button>
-                    <we-button data-select-data-attribute="max">Max</we-button>
+                    <we-button data-select-data-attribute="min">Minimum</we-button>
+                    <we-button data-select-data-attribute="max">Maximum</we-button>
                     <we-button data-select-data-attribute="count_distinct">Count Distinct</we-button>
                 </we-select>
                 <we-select string="Field"
                            data-name="field_opt"
                            data-attribute-name="statField"
                            data-no-preview="true">
-                    <we-button data-select-data-attribute="">— Select —</we-button>
+                    <we-button data-select-data-attribute="">— Select Field —</we-button>
                 </we-select>
                 <we-select string="Group By"
                            data-name="group_by_opt"
@@ -60,23 +68,73 @@
                            data-no-preview="true">
                     <we-button data-select-data-attribute="">None</we-button>
                 </we-select>
+                <we-input string="Filter (Domain)"
+                          data-attribute-name="domain"
+                          data-no-preview="true"
+                          placeholder="e.g. [('state','=','done')]"/>
+
+                <!-- ═══ Display ═══ -->
+                <we-title>Display</we-title>
+                <we-input string="Title"
+                          data-attribute-name="title"
+                          data-no-preview="true"
+                          placeholder="e.g. Total Sales"/>
                 <we-select string="Style"
+                           data-name="sub_type_opt"
                            data-attribute-name="subType"
                            data-no-preview="true">
-                    <we-button data-select-data-attribute="default">Default</we-button>
-                    <we-button data-select-data-attribute="progress">Progress Bar</we-button>
-                    <we-button data-select-data-attribute="trend">Trend (Delta)</we-button>
-                    <we-button data-select-data-attribute="threshold">Threshold</we-button>
+                    <we-button data-select-data-attribute="default"
+                               data-name="default_opt">Simple</we-button>
+                    <we-button data-select-data-attribute="progress"
+                               data-name="progress_opt">Progress Bar</we-button>
+                    <we-button data-select-data-attribute="trend"
+                               data-name="trend_opt">Trend (Delta)</we-button>
+                    <we-button data-select-data-attribute="threshold"
+                               data-name="threshold_opt">Threshold</we-button>
                 </we-select>
+
+                <!-- Progress Bar options -->
                 <we-input string="Target Value"
                           data-attribute-name="targetValue"
-                          data-no-preview="true"/>
+                          data-dependencies="progress_opt"
+                          data-no-preview="true"
+                          placeholder="100"/>
+
+                <!-- Trend options -->
                 <we-input string="Previous Value"
                           data-attribute-name="previousValue"
-                          data-no-preview="true"/>
-                <we-input string="Domain"
-                          data-attribute-name="domain"
-                          data-no-preview="true"/>
+                          data-dependencies="trend_opt"
+                          data-no-preview="true"
+                          placeholder="0"/>
+
+                <!-- Threshold options -->
+                <we-input string="Target"
+                          data-attribute-name="targetValue"
+                          data-dependencies="threshold_opt"
+                          data-no-preview="true"
+                          placeholder="100"/>
+                <we-input string="Warning Level %"
+                          data-attribute-name="thresholdWarning"
+                          data-dependencies="threshold_opt"
+                          data-no-preview="true"
+                          placeholder="50"/>
+                <we-input string="Danger Level %"
+                          data-attribute-name="thresholdDanger"
+                          data-dependencies="threshold_opt"
+                          data-no-preview="true"
+                          placeholder="25"/>
+
+                <!-- ═══ Advanced ═══ -->
+                <we-title>Advanced</we-title>
+                <we-select string="Auto Refresh"
+                           data-attribute-name="refreshInterval"
+                           data-no-preview="true">
+                    <we-button data-select-data-attribute="0">Off</we-button>
+                    <we-button data-select-data-attribute="5">Every 5s</we-button>
+                    <we-button data-select-data-attribute="10">Every 10s</we-button>
+                    <we-button data-select-data-attribute="30">Every 30s</we-button>
+                    <we-button data-select-data-attribute="60">Every 60s</we-button>
+                </we-select>
             </div>
         </xpath>
     </template>

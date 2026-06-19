@@ -47,7 +47,7 @@ options.registry.woow_data_table = options.Class.extend({
             await this._refreshPublicWidgets();
         }
         if (['fieldNames', 'pageSize', 'searchable', 'sortable',
-             'domain'].includes(params.attributeName)) {
+             'domain', 'title', 'refreshInterval'].includes(params.attributeName)) {
             await this._refreshPublicWidgets();
         }
     },

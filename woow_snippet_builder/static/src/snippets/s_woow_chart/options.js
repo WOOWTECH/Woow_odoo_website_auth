@@ -7,8 +7,12 @@ import { rpc } from "@web/core/network/rpc";
  *
  * Dynamically populates Model / Label Field / Value Field / Series Field
  * selects from backend RPC endpoints.
+ * Implements conditional visibility for chart-type-dependent fields.
  */
 options.registry.woow_chart = options.Class.extend({
+
+    // Chart types that don't support multi-series
+    _singleSeriesTypes: new Set(['pie', 'doughnut', 'gauge', 'funnel', 'polarArea']),
 
     async willStart() {
         const _super = this._super.bind(this);
@@ -67,6 +71,17 @@ options.registry.woow_chart = options.Class.extend({
         }
     },
 
+    /**
+     * Hide Series Field for chart types that don't support multi-series.
+     */
+    _computeWidgetVisibility(widgetName) {
+        if (widgetName === 'series_field_opt') {
+            const chartType = this.$target[0].dataset.chartType || 'bar';
+            return !this._singleSeriesTypes.has(chartType);
+        }
+        return this._super(...arguments);
+    },
+
     async selectDataAttribute(previewMode, widgetValue, params) {
         await this._super(...arguments);
         if (params.attributeName === 'modelName' && !previewMode) {
@@ -81,8 +96,15 @@ options.registry.woow_chart = options.Class.extend({
             await this.updateUI();
             await this._refreshPublicWidgets();
         }
-        if (['chartType', 'labelField', 'valueField', 'seriesField',
-             'gaugeMax', 'domain'].includes(params.attributeName)) {
+        if (params.attributeName === 'chartType' && !previewMode) {
+            // Re-render to update visibility of series_field_opt
+            this.rerender = true;
+            await this.updateUI();
+            await this._refreshPublicWidgets();
+        }
+        if (['labelField', 'valueField', 'seriesField',
+             'gaugeMax', 'domain', 'title', 'chartHeight',
+             'showLegend', 'refreshInterval'].includes(params.attributeName)) {
             await this._refreshPublicWidgets();
         }
     },

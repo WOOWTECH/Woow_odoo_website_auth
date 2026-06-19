@@ -12,12 +12,24 @@
                  data-value-field=""
                  data-domain="[]"
                  data-gauge-max="100"
-                 data-series-field="">
+                 data-series-field=""
+                 data-title=""
+                 data-chart-height="400"
+                 data-show-legend="1"
+                 data-refresh-interval="0">
             <div class="container">
                 <div class="woow_chart_content" style="position:relative; height:400px;">
-                    <div class="text-center text-muted py-5">
-                        <i class="fa fa-pie-chart fa-3x mb-2 d-block opacity-50"/>
-                        Configure this chart in the Customize panel →
+                    <div class="text-center text-muted d-flex align-items-center justify-content-center h-100">
+                        <div>
+                            <div class="d-flex align-items-end justify-content-center gap-1 mb-2" style="height:60px;">
+                                <div style="width:12px; height:40%; background:#3B82F6; border-radius:2px;"></div>
+                                <div style="width:12px; height:70%; background:#3B82F6; border-radius:2px;"></div>
+                                <div style="width:12px; height:55%; background:#3B82F6; border-radius:2px;"></div>
+                                <div style="width:12px; height:90%; background:#3B82F6; border-radius:2px;"></div>
+                                <div style="width:12px; height:45%; background:#3B82F6; border-radius:2px;"></div>
+                            </div>
+                            <div class="small">Chart</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -31,37 +43,58 @@
             <div data-js="woow_chart"
                  data-selector=".s_woow_chart"
                  data-no-preview="true">
+
+                <!-- ═══ Data Source ═══ -->
+                <we-title>Data Source</we-title>
                 <we-select string="Model"
                            data-name="model_opt"
                            data-attribute-name="modelName"
                            data-no-preview="true">
-                    <we-button data-select-data-attribute="">— Select —</we-button>
-                </we-select>
-                <we-select string="Chart Type"
-                           data-attribute-name="chartType"
-                           data-no-preview="true">
-                    <we-button data-select-data-attribute="bar">Bar</we-button>
-                    <we-button data-select-data-attribute="line">Line</we-button>
-                    <we-button data-select-data-attribute="pie">Pie</we-button>
-                    <we-button data-select-data-attribute="doughnut">Doughnut</we-button>
-                    <we-button data-select-data-attribute="radar">Radar</we-button>
-                    <we-button data-select-data-attribute="polarArea">Polar Area</we-button>
-                    <we-button data-select-data-attribute="bar_horizontal">Horizontal Bar</we-button>
-                    <we-button data-select-data-attribute="bar_stacked">Stacked Bar</we-button>
-                    <we-button data-select-data-attribute="gauge">Gauge</we-button>
-                    <we-button data-select-data-attribute="funnel">Funnel</we-button>
+                    <we-button data-select-data-attribute="">— Select Model —</we-button>
                 </we-select>
                 <we-select string="Label Field"
                            data-name="label_field_opt"
                            data-attribute-name="labelField"
                            data-no-preview="true">
-                    <we-button data-select-data-attribute="">— Select —</we-button>
+                    <we-button data-select-data-attribute="">— Select Field —</we-button>
                 </we-select>
                 <we-select string="Value Field"
                            data-name="value_field_opt"
                            data-attribute-name="valueField"
                            data-no-preview="true">
-                    <we-button data-select-data-attribute="">— Select —</we-button>
+                    <we-button data-select-data-attribute="">— Select Field —</we-button>
+                </we-select>
+                <we-input string="Filter (Domain)"
+                          data-attribute-name="domain"
+                          data-no-preview="true"
+                          placeholder="e.g. [('state','=','done')]"/>
+
+                <!-- ═══ Chart Settings ═══ -->
+                <we-title>Chart Settings</we-title>
+                <we-select string="Chart Type"
+                           data-name="chart_type_opt"
+                           data-attribute-name="chartType"
+                           data-no-preview="true">
+                    <we-button data-select-data-attribute="bar"
+                               data-name="chart_bar">Bar</we-button>
+                    <we-button data-select-data-attribute="line"
+                               data-name="chart_line">Line</we-button>
+                    <we-button data-select-data-attribute="pie"
+                               data-name="chart_pie">Pie</we-button>
+                    <we-button data-select-data-attribute="doughnut"
+                               data-name="chart_doughnut">Doughnut</we-button>
+                    <we-button data-select-data-attribute="radar"
+                               data-name="chart_radar">Radar</we-button>
+                    <we-button data-select-data-attribute="polarArea"
+                               data-name="chart_polar">Polar Area</we-button>
+                    <we-button data-select-data-attribute="bar_horizontal"
+                               data-name="chart_hbar">Horizontal Bar</we-button>
+                    <we-button data-select-data-attribute="bar_stacked"
+                               data-name="chart_stacked">Stacked Bar</we-button>
+                    <we-button data-select-data-attribute="gauge"
+                               data-name="chart_gauge">Gauge</we-button>
+                    <we-button data-select-data-attribute="funnel"
+                               data-name="chart_funnel">Funnel</we-button>
                 </we-select>
                 <we-select string="Series Field"
                            data-name="series_field_opt"
@@ -70,11 +103,44 @@
                     <we-button data-select-data-attribute="">None</we-button>
                 </we-select>
                 <we-input string="Gauge Max"
+                          data-name="gauge_max_opt"
                           data-attribute-name="gaugeMax"
-                          data-no-preview="true"/>
-                <we-input string="Domain"
-                          data-attribute-name="domain"
-                          data-no-preview="true"/>
+                          data-dependencies="chart_gauge"
+                          data-no-preview="true"
+                          placeholder="100"/>
+
+                <!-- ═══ Display ═══ -->
+                <we-title>Display</we-title>
+                <we-input string="Title"
+                          data-attribute-name="title"
+                          data-no-preview="true"
+                          placeholder="e.g. Sales by Region"/>
+                <we-select string="Chart Height"
+                           data-attribute-name="chartHeight"
+                           data-no-preview="true">
+                    <we-button data-select-data-attribute="300">300px</we-button>
+                    <we-button data-select-data-attribute="400">400px</we-button>
+                    <we-button data-select-data-attribute="500">500px</we-button>
+                    <we-button data-select-data-attribute="600">600px</we-button>
+                </we-select>
+                <we-select string="Show Legend"
+                           data-attribute-name="showLegend"
+                           data-no-preview="true">
+                    <we-button data-select-data-attribute="1">Yes</we-button>
+                    <we-button data-select-data-attribute="0">No</we-button>
+                </we-select>
+
+                <!-- ═══ Advanced ═══ -->
+                <we-title>Advanced</we-title>
+                <we-select string="Auto Refresh"
+                           data-attribute-name="refreshInterval"
+                           data-no-preview="true">
+                    <we-button data-select-data-attribute="0">Off</we-button>
+                    <we-button data-select-data-attribute="5">Every 5s</we-button>
+                    <we-button data-select-data-attribute="10">Every 10s</we-button>
+                    <we-button data-select-data-attribute="30">Every 30s</we-button>
+                    <we-button data-select-data-attribute="60">Every 60s</we-button>
+                </we-select>
             </div>
         </xpath>
     </template>

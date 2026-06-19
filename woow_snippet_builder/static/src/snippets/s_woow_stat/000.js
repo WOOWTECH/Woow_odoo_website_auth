@@ -77,9 +77,10 @@ publicWidget.registry.s_woow_stat = publicWidget.Widget.extend({
 
         const value = this._formatNumber(result.value);
         const ds = this.el.dataset;
+        const customTitle = ds.title || '';
         const operation = ds.operation || 'count';
         const modelName = (ds.modelName || '').replace(/\./g, ' ');
-        const label = `${operation.charAt(0).toUpperCase() + operation.slice(1)} of ${modelName}`;
+        const label = customTitle || `${operation.charAt(0).toUpperCase() + operation.slice(1)} of ${modelName}`;
 
         let html = '';
         switch (result.sub_type) {
