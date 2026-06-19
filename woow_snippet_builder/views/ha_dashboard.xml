@@ -1,284 +1,1012 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- HA Dashboard page template -->
+    <!-- HA Dashboard — Comprehensive page using ALL WoOW snippet types x ALL HA models -->
     <template id="ha_dashboard_page" name="HA Dashboard">
         <t t-call="website.layout">
             <div id="wrap" class="oe_structure oe_empty">
 
-                <!-- ══════════════════════════════════════════════
-                     Hero / Title Section
-                     ══════════════════════════════════════════════ -->
+                <!-- ══════════════════════════════════════════════════════════════
+                     HERO SECTION
+                     ══════════════════════════════════════════════════════════════ -->
                 <section class="s_text_block pt40 pb24 o_cc o_cc1">
                     <div class="container">
                         <div class="row">
                             <div class="col-lg-12 text-center">
                                 <h1 class="display-5 fw-bold">Home Assistant Dashboard</h1>
-                                <p class="lead text-muted">Real-time overview of devices, entities, areas, and history</p>
+                                <p class="lead text-muted">Complete overview — Devices · Entities · Areas · History · Groups · Labels</p>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- ══════════════════════════════════════════════
-                     Section 1: Stat Cards — KPI Overview
-                     ══════════════════════════════════════════════ -->
 
-                <!-- Stat: Total Devices -->
-                <section class="s_woow_stat pt32 pb16"
-                         data-snippet="s_woow_stat"
-                         data-name="Stat Card"
+                <!-- ██████████████████████████████████████████████████████████████
+                     SECTION A: GLOBAL KPI STAT CARDS
+                     ██████████████████████████████████████████████████████████████ -->
+                <section class="s_text_block pt24 pb8 o_cc o_cc2">
+                    <div class="container"><h2 class="text-center">Overview KPIs</h2></div>
+                </section>
+
+                <!-- A01: ha.instance — count -->
+                <section class="s_woow_stat pt16 pb8"
+                         data-snippet="s_woow_stat" data-name="Stat Card"
+                         data-model-name="ha.instance" data-operation="count"
+                         data-stat-field="" data-group-by="" data-domain="[]"
+                         data-sub-type="default" data-target-value="100"
+                         data-threshold-warning="50" data-threshold-danger="25"
+                         data-previous-value="0" data-title="HA Instances"
+                         data-refresh-interval="30">
+                    <div class="container"><div class="woow_stat_content text-center py-3">
+                        <div class="display-4 fw-bold text-primary">—</div>
+                        <div class="text-muted mt-1">HA Instances</div>
+                    </div></div>
+                </section>
+
+                <!-- A02: ha.device — count -->
+                <section class="s_woow_stat pt8 pb8"
+                         data-snippet="s_woow_stat" data-name="Stat Card"
+                         data-model-name="ha.device" data-operation="count"
+                         data-stat-field="" data-group-by="" data-domain="[]"
+                         data-sub-type="default" data-target-value="200"
+                         data-threshold-warning="50" data-threshold-danger="25"
+                         data-previous-value="0" data-title="Total Devices"
+                         data-refresh-interval="30">
+                    <div class="container"><div class="woow_stat_content text-center py-3">
+                        <div class="display-4 fw-bold text-primary">—</div>
+                        <div class="text-muted mt-1">Total Devices</div>
+                    </div></div>
+                </section>
+
+                <!-- A03: ha.entity — count -->
+                <section class="s_woow_stat pt8 pb8"
+                         data-snippet="s_woow_stat" data-name="Stat Card"
+                         data-model-name="ha.entity" data-operation="count"
+                         data-stat-field="" data-group-by="" data-domain="[]"
+                         data-sub-type="default" data-target-value="1000"
+                         data-threshold-warning="50" data-threshold-danger="25"
+                         data-previous-value="0" data-title="Total Entities"
+                         data-refresh-interval="30">
+                    <div class="container"><div class="woow_stat_content text-center py-3">
+                        <div class="display-4 fw-bold text-primary">—</div>
+                        <div class="text-muted mt-1">Total Entities</div>
+                    </div></div>
+                </section>
+
+                <!-- A04: ha.area — count -->
+                <section class="s_woow_stat pt8 pb8"
+                         data-snippet="s_woow_stat" data-name="Stat Card"
+                         data-model-name="ha.area" data-operation="count"
+                         data-stat-field="" data-group-by="" data-domain="[]"
+                         data-sub-type="default" data-target-value="20"
+                         data-threshold-warning="50" data-threshold-danger="25"
+                         data-previous-value="0" data-title="Total Areas"
+                         data-refresh-interval="30">
+                    <div class="container"><div class="woow_stat_content text-center py-3">
+                        <div class="display-4 fw-bold text-primary">—</div>
+                        <div class="text-muted mt-1">Total Areas</div>
+                    </div></div>
+                </section>
+
+                <!-- A05: ha.entity.history — count -->
+                <section class="s_woow_stat pt8 pb8"
+                         data-snippet="s_woow_stat" data-name="Stat Card"
+                         data-model-name="ha.entity.history" data-operation="count"
+                         data-stat-field="" data-group-by="" data-domain="[]"
+                         data-sub-type="default" data-target-value="100000"
+                         data-threshold-warning="50" data-threshold-danger="25"
+                         data-previous-value="0" data-title="History Records"
+                         data-refresh-interval="30">
+                    <div class="container"><div class="woow_stat_content text-center py-3">
+                        <div class="display-4 fw-bold text-primary">—</div>
+                        <div class="text-muted mt-1">History Records</div>
+                    </div></div>
+                </section>
+
+                <!-- A06: ha.entity.group — count -->
+                <section class="s_woow_stat pt8 pb8"
+                         data-snippet="s_woow_stat" data-name="Stat Card"
+                         data-model-name="ha.entity.group" data-operation="count"
+                         data-stat-field="" data-group-by="" data-domain="[]"
+                         data-sub-type="default" data-target-value="20"
+                         data-threshold-warning="50" data-threshold-danger="25"
+                         data-previous-value="0" data-title="Entity Groups"
+                         data-refresh-interval="30">
+                    <div class="container"><div class="woow_stat_content text-center py-3">
+                        <div class="display-4 fw-bold text-primary">—</div>
+                        <div class="text-muted mt-1">Entity Groups</div>
+                    </div></div>
+                </section>
+
+                <!-- A07: ha.label — count -->
+                <section class="s_woow_stat pt8 pb16"
+                         data-snippet="s_woow_stat" data-name="Stat Card"
+                         data-model-name="ha.label" data-operation="count"
+                         data-stat-field="" data-group-by="" data-domain="[]"
+                         data-sub-type="default" data-target-value="20"
+                         data-threshold-warning="50" data-threshold-danger="25"
+                         data-previous-value="0" data-title="Labels"
+                         data-refresh-interval="30">
+                    <div class="container"><div class="woow_stat_content text-center py-3">
+                        <div class="display-4 fw-bold text-primary">—</div>
+                        <div class="text-muted mt-1">Labels</div>
+                    </div></div>
+                </section>
+
+
+                <!-- ██████████████████████████████████████████████████████████████
+                     SECTION B: DEVICE ANALYTICS
+                     ██████████████████████████████████████████████████████████████ -->
+                <section class="s_text_block pt24 pb8 o_cc o_cc2">
+                    <div class="container"><h2 class="text-center">Device Analytics</h2></div>
+                </section>
+
+                <!-- B01: ha.device — count by area (stat, group_by) -->
+                <section class="s_woow_stat pt16 pb8"
+                         data-snippet="s_woow_stat" data-name="Stat Card"
+                         data-model-name="ha.device" data-operation="count"
+                         data-stat-field="" data-group-by="area_id" data-domain="[]"
+                         data-sub-type="default" data-target-value="100"
+                         data-threshold-warning="50" data-threshold-danger="25"
+                         data-previous-value="0" data-title="Devices by Area"
+                         data-refresh-interval="30">
+                    <div class="container"><div class="woow_stat_content text-center py-3">
+                        <div class="display-4 fw-bold text-primary">—</div>
+                        <div class="text-muted mt-1">Devices by Area</div>
+                    </div></div>
+                </section>
+
+                <!-- B02: ha.device — count by manufacturer (stat, group_by) -->
+                <section class="s_woow_stat pt8 pb8"
+                         data-snippet="s_woow_stat" data-name="Stat Card"
+                         data-model-name="ha.device" data-operation="count"
+                         data-stat-field="" data-group-by="manufacturer" data-domain="[]"
+                         data-sub-type="default" data-target-value="100"
+                         data-threshold-warning="50" data-threshold-danger="25"
+                         data-previous-value="0" data-title="Devices by Manufacturer"
+                         data-refresh-interval="30">
+                    <div class="container"><div class="woow_stat_content text-center py-3">
+                        <div class="display-4 fw-bold text-primary">—</div>
+                        <div class="text-muted mt-1">Devices by Manufacturer</div>
+                    </div></div>
+                </section>
+
+                <!-- B03: ha.device — bar chart by area -->
+                <section class="s_woow_chart pt16 pb8"
+                         data-snippet="s_woow_chart" data-name="Chart"
+                         data-model-name="ha.device" data-chart-type="bar"
+                         data-label-field="area_id" data-value-field="id"
+                         data-domain="[]" data-gauge-max="100" data-series-field=""
+                         data-title="Devices by Area (Bar)" data-chart-height="400"
+                         data-show-legend="1" data-refresh-interval="60">
+                    <div class="container"><div class="woow_chart_content" style="position:relative; height:400px;">
+                        <div class="text-center text-muted d-flex align-items-center justify-content-center h-100">
+                            <div><div class="small">Devices by Area (Bar)</div></div>
+                        </div>
+                    </div></div>
+                </section>
+
+                <!-- B04: ha.device — pie chart by manufacturer -->
+                <section class="s_woow_chart pt8 pb8"
+                         data-snippet="s_woow_chart" data-name="Chart"
+                         data-model-name="ha.device" data-chart-type="pie"
+                         data-label-field="manufacturer" data-value-field="id"
+                         data-domain="[]" data-gauge-max="100" data-series-field=""
+                         data-title="Devices by Manufacturer (Pie)" data-chart-height="400"
+                         data-show-legend="1" data-refresh-interval="60">
+                    <div class="container"><div class="woow_chart_content" style="position:relative; height:400px;">
+                        <div class="text-center text-muted d-flex align-items-center justify-content-center h-100">
+                            <div><div class="small">Devices by Manufacturer (Pie)</div></div>
+                        </div>
+                    </div></div>
+                </section>
+
+                <!-- B05: ha.device — doughnut chart by model -->
+                <section class="s_woow_chart pt8 pb8"
+                         data-snippet="s_woow_chart" data-name="Chart"
+                         data-model-name="ha.device" data-chart-type="doughnut"
+                         data-label-field="model" data-value-field="id"
+                         data-domain="[]" data-gauge-max="100" data-series-field=""
+                         data-title="Devices by Model (Doughnut)" data-chart-height="400"
+                         data-show-legend="1" data-refresh-interval="60">
+                    <div class="container"><div class="woow_chart_content" style="position:relative; height:400px;">
+                        <div class="text-center text-muted d-flex align-items-center justify-content-center h-100">
+                            <div><div class="small">Devices by Model (Doughnut)</div></div>
+                        </div>
+                    </div></div>
+                </section>
+
+                <!-- B06: ha.device — horizontal bar by manufacturer -->
+                <section class="s_woow_chart pt8 pb8"
+                         data-snippet="s_woow_chart" data-name="Chart"
+                         data-model-name="ha.device" data-chart-type="bar_horizontal"
+                         data-label-field="manufacturer" data-value-field="id"
+                         data-domain="[]" data-gauge-max="100" data-series-field=""
+                         data-title="Devices by Manufacturer (H-Bar)" data-chart-height="400"
+                         data-show-legend="0" data-refresh-interval="60">
+                    <div class="container"><div class="woow_chart_content" style="position:relative; height:400px;">
+                        <div class="text-center text-muted d-flex align-items-center justify-content-center h-100">
+                            <div><div class="small">Devices by Manufacturer (H-Bar)</div></div>
+                        </div>
+                    </div></div>
+                </section>
+
+                <!-- B07: ha.device — data table (full) -->
+                <section class="s_woow_data_table pt16 pb16"
+                         data-snippet="s_woow_data_table" data-name="Data Table"
                          data-model-name="ha.device"
-                         data-operation="count"
-                         data-stat-field=""
-                         data-group-by=""
-                         data-domain="[]"
-                         data-sub-type="default"
-                         data-target-value="100"
-                         data-threshold-warning="50"
-                         data-threshold-danger="25"
-                         data-previous-value="0"
-                         data-title="Total Devices"
-                         data-refresh-interval="30">
-                    <div class="container">
-                        <div class="woow_stat_content text-center py-3">
-                            <div class="display-4 fw-bold text-primary">—</div>
-                            <div class="text-muted mt-1">Total Devices</div>
-                        </div>
-                    </div>
+                         data-field-names="name,manufacturer,model,area_id,sw_version,hw_version"
+                         data-domain="[]" data-page-size="10"
+                         data-searchable="1" data-sortable="1"
+                         data-title="Device List" data-refresh-interval="60">
+                    <div class="container"><div class="woow_data_table_content">
+                        <table class="table table-sm table-hover mb-0">
+                            <thead class="table-light"><tr>
+                                <th>Name</th><th>Manufacturer</th><th>Model</th><th>Area</th><th>SW Version</th><th>HW Version</th>
+                            </tr></thead>
+                            <tbody>
+                                <tr><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td></tr>
+                            </tbody>
+                        </table>
+                    </div></div>
                 </section>
 
-                <!-- Stat: Total Entities -->
-                <section class="s_woow_stat pt16 pb16"
-                         data-snippet="s_woow_stat"
-                         data-name="Stat Card"
+
+                <!-- ██████████████████████████████████████████████████████████████
+                     SECTION C: ENTITY ANALYTICS
+                     ██████████████████████████████████████████████████████████████ -->
+                <section class="s_text_block pt24 pb8 o_cc o_cc2">
+                    <div class="container"><h2 class="text-center">Entity Analytics</h2></div>
+                </section>
+
+                <!-- C01: ha.entity — count by domain (stat) -->
+                <section class="s_woow_stat pt16 pb8"
+                         data-snippet="s_woow_stat" data-name="Stat Card"
+                         data-model-name="ha.entity" data-operation="count"
+                         data-stat-field="" data-group-by="domain" data-domain="[]"
+                         data-sub-type="default" data-target-value="100"
+                         data-threshold-warning="50" data-threshold-danger="25"
+                         data-previous-value="0" data-title="Entities by Domain"
+                         data-refresh-interval="30">
+                    <div class="container"><div class="woow_stat_content text-center py-3">
+                        <div class="display-4 fw-bold text-primary">—</div>
+                        <div class="text-muted mt-1">Entities by Domain</div>
+                    </div></div>
+                </section>
+
+                <!-- C02: ha.entity — count by area (stat) -->
+                <section class="s_woow_stat pt8 pb8"
+                         data-snippet="s_woow_stat" data-name="Stat Card"
+                         data-model-name="ha.entity" data-operation="count"
+                         data-stat-field="" data-group-by="area_id" data-domain="[]"
+                         data-sub-type="default" data-target-value="100"
+                         data-threshold-warning="50" data-threshold-danger="25"
+                         data-previous-value="0" data-title="Entities by Area"
+                         data-refresh-interval="30">
+                    <div class="container"><div class="woow_stat_content text-center py-3">
+                        <div class="display-4 fw-bold text-primary">—</div>
+                        <div class="text-muted mt-1">Entities by Area</div>
+                    </div></div>
+                </section>
+
+                <!-- C03: ha.entity — count by device (stat) -->
+                <section class="s_woow_stat pt8 pb8"
+                         data-snippet="s_woow_stat" data-name="Stat Card"
+                         data-model-name="ha.entity" data-operation="count"
+                         data-stat-field="" data-group-by="device_id" data-domain="[]"
+                         data-sub-type="default" data-target-value="100"
+                         data-threshold-warning="50" data-threshold-danger="25"
+                         data-previous-value="0" data-title="Entities per Device"
+                         data-refresh-interval="30">
+                    <div class="container"><div class="woow_stat_content text-center py-3">
+                        <div class="display-4 fw-bold text-primary">—</div>
+                        <div class="text-muted mt-1">Entities per Device</div>
+                    </div></div>
+                </section>
+
+                <!-- C04: ha.entity — pie by domain -->
+                <section class="s_woow_chart pt16 pb8"
+                         data-snippet="s_woow_chart" data-name="Chart"
+                         data-model-name="ha.entity" data-chart-type="pie"
+                         data-label-field="domain" data-value-field="id"
+                         data-domain="[]" data-gauge-max="100" data-series-field=""
+                         data-title="Entities by Domain (Pie)" data-chart-height="400"
+                         data-show-legend="1" data-refresh-interval="60">
+                    <div class="container"><div class="woow_chart_content" style="position:relative; height:400px;">
+                        <div class="text-center text-muted d-flex align-items-center justify-content-center h-100">
+                            <div><div class="small">Entities by Domain (Pie)</div></div>
+                        </div>
+                    </div></div>
+                </section>
+
+                <!-- C05: ha.entity — bar by area -->
+                <section class="s_woow_chart pt8 pb8"
+                         data-snippet="s_woow_chart" data-name="Chart"
+                         data-model-name="ha.entity" data-chart-type="bar"
+                         data-label-field="area_id" data-value-field="id"
+                         data-domain="[]" data-gauge-max="100" data-series-field=""
+                         data-title="Entities by Area (Bar)" data-chart-height="400"
+                         data-show-legend="1" data-refresh-interval="60">
+                    <div class="container"><div class="woow_chart_content" style="position:relative; height:400px;">
+                        <div class="text-center text-muted d-flex align-items-center justify-content-center h-100">
+                            <div><div class="small">Entities by Area (Bar)</div></div>
+                        </div>
+                    </div></div>
+                </section>
+
+                <!-- C06: ha.entity — doughnut by domain -->
+                <section class="s_woow_chart pt8 pb8"
+                         data-snippet="s_woow_chart" data-name="Chart"
+                         data-model-name="ha.entity" data-chart-type="doughnut"
+                         data-label-field="domain" data-value-field="id"
+                         data-domain="[]" data-gauge-max="100" data-series-field=""
+                         data-title="Entity Domain Distribution (Doughnut)" data-chart-height="400"
+                         data-show-legend="1" data-refresh-interval="60">
+                    <div class="container"><div class="woow_chart_content" style="position:relative; height:400px;">
+                        <div class="text-center text-muted d-flex align-items-center justify-content-center h-100">
+                            <div><div class="small">Entity Domain Distribution (Doughnut)</div></div>
+                        </div>
+                    </div></div>
+                </section>
+
+                <!-- C07: ha.entity — radar by domain -->
+                <section class="s_woow_chart pt8 pb8"
+                         data-snippet="s_woow_chart" data-name="Chart"
+                         data-model-name="ha.entity" data-chart-type="radar"
+                         data-label-field="domain" data-value-field="id"
+                         data-domain="[]" data-gauge-max="100" data-series-field=""
+                         data-title="Entity Domain Radar" data-chart-height="400"
+                         data-show-legend="0" data-refresh-interval="60">
+                    <div class="container"><div class="woow_chart_content" style="position:relative; height:400px;">
+                        <div class="text-center text-muted d-flex align-items-center justify-content-center h-100">
+                            <div><div class="small">Entity Domain Radar</div></div>
+                        </div>
+                    </div></div>
+                </section>
+
+                <!-- C08: ha.entity — polar area by domain -->
+                <section class="s_woow_chart pt8 pb8"
+                         data-snippet="s_woow_chart" data-name="Chart"
+                         data-model-name="ha.entity" data-chart-type="polarArea"
+                         data-label-field="domain" data-value-field="id"
+                         data-domain="[]" data-gauge-max="100" data-series-field=""
+                         data-title="Entity Domain (Polar Area)" data-chart-height="400"
+                         data-show-legend="1" data-refresh-interval="60">
+                    <div class="container"><div class="woow_chart_content" style="position:relative; height:400px;">
+                        <div class="text-center text-muted d-flex align-items-center justify-content-center h-100">
+                            <div><div class="small">Entity Domain (Polar Area)</div></div>
+                        </div>
+                    </div></div>
+                </section>
+
+                <!-- C09: ha.entity — data table (full) -->
+                <section class="s_woow_data_table pt16 pb16"
+                         data-snippet="s_woow_data_table" data-name="Data Table"
                          data-model-name="ha.entity"
-                         data-operation="count"
-                         data-stat-field=""
-                         data-group-by=""
-                         data-domain="[]"
-                         data-sub-type="default"
-                         data-target-value="100"
-                         data-threshold-warning="50"
-                         data-threshold-danger="25"
-                         data-previous-value="0"
-                         data-title="Total Entities"
-                         data-refresh-interval="30">
-                    <div class="container">
-                        <div class="woow_stat_content text-center py-3">
-                            <div class="display-4 fw-bold text-primary">—</div>
-                            <div class="text-muted mt-1">Total Entities</div>
-                        </div>
-                    </div>
+                         data-field-names="entity_id,name,domain,entity_state,area_id,device_id,last_changed"
+                         data-domain="[]" data-page-size="10"
+                         data-searchable="1" data-sortable="1"
+                         data-title="Entity List" data-refresh-interval="60">
+                    <div class="container"><div class="woow_data_table_content">
+                        <table class="table table-sm table-hover mb-0">
+                            <thead class="table-light"><tr>
+                                <th>Entity ID</th><th>Name</th><th>Domain</th><th>State</th><th>Area</th><th>Device</th><th>Last Changed</th>
+                            </tr></thead>
+                            <tbody>
+                                <tr><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td></tr>
+                            </tbody>
+                        </table>
+                    </div></div>
                 </section>
 
-                <!-- Stat: Total Areas -->
-                <section class="s_woow_stat pt16 pb16"
-                         data-snippet="s_woow_stat"
-                         data-name="Stat Card"
+                <!-- C10: ha.entity — sensor entities only (filtered table) -->
+                <section class="s_woow_data_table pt8 pb16"
+                         data-snippet="s_woow_data_table" data-name="Data Table"
+                         data-model-name="ha.entity"
+                         data-field-names="entity_id,name,entity_state,area_id,last_changed"
+                         data-domain="[('domain','=','sensor')]" data-page-size="10"
+                         data-searchable="1" data-sortable="1"
+                         data-title="Sensor Entities" data-refresh-interval="60">
+                    <div class="container"><div class="woow_data_table_content">
+                        <table class="table table-sm table-hover mb-0">
+                            <thead class="table-light"><tr>
+                                <th>Entity ID</th><th>Name</th><th>State</th><th>Area</th><th>Last Changed</th>
+                            </tr></thead>
+                            <tbody>
+                                <tr><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td></tr>
+                            </tbody>
+                        </table>
+                    </div></div>
+                </section>
+
+
+                <!-- ██████████████████████████████████████████████████████████████
+                     SECTION D: AREA ANALYTICS
+                     ██████████████████████████████████████████████████████████████ -->
+                <section class="s_text_block pt24 pb8 o_cc o_cc2">
+                    <div class="container"><h2 class="text-center">Area Analytics</h2></div>
+                </section>
+
+                <!-- D01: ha.area — sum entity_count (stat) -->
+                <section class="s_woow_stat pt16 pb8"
+                         data-snippet="s_woow_stat" data-name="Stat Card"
+                         data-model-name="ha.area" data-operation="sum"
+                         data-stat-field="entity_count" data-group-by="" data-domain="[]"
+                         data-sub-type="default" data-target-value="1000"
+                         data-threshold-warning="50" data-threshold-danger="25"
+                         data-previous-value="0" data-title="Total Entities across Areas"
+                         data-refresh-interval="30">
+                    <div class="container"><div class="woow_stat_content text-center py-3">
+                        <div class="display-4 fw-bold text-primary">—</div>
+                        <div class="text-muted mt-1">Total Entities across Areas</div>
+                    </div></div>
+                </section>
+
+                <!-- D02: ha.area — avg entity_count (stat) -->
+                <section class="s_woow_stat pt8 pb8"
+                         data-snippet="s_woow_stat" data-name="Stat Card"
+                         data-model-name="ha.area" data-operation="avg"
+                         data-stat-field="entity_count" data-group-by="" data-domain="[]"
+                         data-sub-type="default" data-target-value="100"
+                         data-threshold-warning="50" data-threshold-danger="25"
+                         data-previous-value="0" data-title="Avg Entities per Area"
+                         data-refresh-interval="30">
+                    <div class="container"><div class="woow_stat_content text-center py-3">
+                        <div class="display-4 fw-bold text-primary">—</div>
+                        <div class="text-muted mt-1">Avg Entities per Area</div>
+                    </div></div>
+                </section>
+
+                <!-- D03: ha.area — bar entity_count -->
+                <section class="s_woow_chart pt16 pb8"
+                         data-snippet="s_woow_chart" data-name="Chart"
+                         data-model-name="ha.area" data-chart-type="bar"
+                         data-label-field="name" data-value-field="entity_count"
+                         data-domain="[]" data-gauge-max="100" data-series-field=""
+                         data-title="Entities per Area (Bar)" data-chart-height="400"
+                         data-show-legend="0" data-refresh-interval="60">
+                    <div class="container"><div class="woow_chart_content" style="position:relative; height:400px;">
+                        <div class="text-center text-muted d-flex align-items-center justify-content-center h-100">
+                            <div><div class="small">Entities per Area (Bar)</div></div>
+                        </div>
+                    </div></div>
+                </section>
+
+                <!-- D04: ha.area — horizontal bar entity_count -->
+                <section class="s_woow_chart pt8 pb8"
+                         data-snippet="s_woow_chart" data-name="Chart"
+                         data-model-name="ha.area" data-chart-type="bar_horizontal"
+                         data-label-field="name" data-value-field="entity_count"
+                         data-domain="[]" data-gauge-max="100" data-series-field=""
+                         data-title="Entities per Area (H-Bar)" data-chart-height="400"
+                         data-show-legend="0" data-refresh-interval="60">
+                    <div class="container"><div class="woow_chart_content" style="position:relative; height:400px;">
+                        <div class="text-center text-muted d-flex align-items-center justify-content-center h-100">
+                            <div><div class="small">Entities per Area (H-Bar)</div></div>
+                        </div>
+                    </div></div>
+                </section>
+
+                <!-- D05: ha.area — data table -->
+                <section class="s_woow_data_table pt16 pb16"
+                         data-snippet="s_woow_data_table" data-name="Data Table"
                          data-model-name="ha.area"
-                         data-operation="count"
-                         data-stat-field=""
-                         data-group-by=""
-                         data-domain="[]"
-                         data-sub-type="default"
-                         data-target-value="100"
-                         data-threshold-warning="50"
-                         data-threshold-danger="25"
-                         data-previous-value="0"
-                         data-title="Total Areas"
-                         data-refresh-interval="30">
-                    <div class="container">
-                        <div class="woow_stat_content text-center py-3">
-                            <div class="display-4 fw-bold text-primary">—</div>
-                            <div class="text-muted mt-1">Total Areas</div>
-                        </div>
-                    </div>
+                         data-field-names="name,area_id,entity_count,floor_id,icon"
+                         data-domain="[]" data-page-size="25"
+                         data-searchable="1" data-sortable="1"
+                         data-title="Area List" data-refresh-interval="60">
+                    <div class="container"><div class="woow_data_table_content">
+                        <table class="table table-sm table-hover mb-0">
+                            <thead class="table-light"><tr>
+                                <th>Name</th><th>Area ID</th><th>Entity Count</th><th>Floor</th><th>Icon</th>
+                            </tr></thead>
+                            <tbody>
+                                <tr><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td></tr>
+                            </tbody>
+                        </table>
+                    </div></div>
                 </section>
 
-                <!-- Stat: History Records -->
-                <section class="s_woow_stat pt16 pb32"
-                         data-snippet="s_woow_stat"
-                         data-name="Stat Card"
+
+                <!-- ██████████████████████████████████████████████████████████████
+                     SECTION E: ENTITY HISTORY ANALYTICS (DETAILED)
+                     ██████████████████████████████████████████████████████████████ -->
+                <section class="s_text_block pt24 pb8 o_cc o_cc2">
+                    <div class="container"><h2 class="text-center">Entity History Analytics</h2></div>
+                </section>
+
+                <!-- E01: ha.entity.history — avg num_state (stat) -->
+                <section class="s_woow_stat pt16 pb8"
+                         data-snippet="s_woow_stat" data-name="Stat Card"
+                         data-model-name="ha.entity.history" data-operation="avg"
+                         data-stat-field="num_state" data-group-by="" data-domain="[]"
+                         data-sub-type="default" data-target-value="100"
+                         data-threshold-warning="50" data-threshold-danger="25"
+                         data-previous-value="0" data-title="Avg Numeric State"
+                         data-refresh-interval="30">
+                    <div class="container"><div class="woow_stat_content text-center py-3">
+                        <div class="display-4 fw-bold text-primary">—</div>
+                        <div class="text-muted mt-1">Avg Numeric State</div>
+                    </div></div>
+                </section>
+
+                <!-- E02: ha.entity.history — max num_state (stat) -->
+                <section class="s_woow_stat pt8 pb8"
+                         data-snippet="s_woow_stat" data-name="Stat Card"
+                         data-model-name="ha.entity.history" data-operation="max"
+                         data-stat-field="num_state" data-group-by="" data-domain="[]"
+                         data-sub-type="default" data-target-value="1000"
+                         data-threshold-warning="50" data-threshold-danger="25"
+                         data-previous-value="0" data-title="Max Numeric State"
+                         data-refresh-interval="30">
+                    <div class="container"><div class="woow_stat_content text-center py-3">
+                        <div class="display-4 fw-bold text-primary">—</div>
+                        <div class="text-muted mt-1">Max Numeric State</div>
+                    </div></div>
+                </section>
+
+                <!-- E03: ha.entity.history — min num_state (stat) -->
+                <section class="s_woow_stat pt8 pb8"
+                         data-snippet="s_woow_stat" data-name="Stat Card"
+                         data-model-name="ha.entity.history" data-operation="min"
+                         data-stat-field="num_state" data-group-by="" data-domain="[]"
+                         data-sub-type="default" data-target-value="100"
+                         data-threshold-warning="50" data-threshold-danger="25"
+                         data-previous-value="0" data-title="Min Numeric State"
+                         data-refresh-interval="30">
+                    <div class="container"><div class="woow_stat_content text-center py-3">
+                        <div class="display-4 fw-bold text-primary">—</div>
+                        <div class="text-muted mt-1">Min Numeric State</div>
+                    </div></div>
+                </section>
+
+                <!-- E04: ha.entity.history — count by domain (stat) -->
+                <section class="s_woow_stat pt8 pb8"
+                         data-snippet="s_woow_stat" data-name="Stat Card"
+                         data-model-name="ha.entity.history" data-operation="count"
+                         data-stat-field="" data-group-by="domain" data-domain="[]"
+                         data-sub-type="default" data-target-value="100"
+                         data-threshold-warning="50" data-threshold-danger="25"
+                         data-previous-value="0" data-title="History by Domain"
+                         data-refresh-interval="30">
+                    <div class="container"><div class="woow_stat_content text-center py-3">
+                        <div class="display-4 fw-bold text-primary">—</div>
+                        <div class="text-muted mt-1">History by Domain</div>
+                    </div></div>
+                </section>
+
+                <!-- E05: ha.entity.history — count by entity_state (stat) -->
+                <section class="s_woow_stat pt8 pb8"
+                         data-snippet="s_woow_stat" data-name="Stat Card"
+                         data-model-name="ha.entity.history" data-operation="count"
+                         data-stat-field="" data-group-by="entity_state" data-domain="[]"
+                         data-sub-type="default" data-target-value="100"
+                         data-threshold-warning="50" data-threshold-danger="25"
+                         data-previous-value="0" data-title="History by State"
+                         data-refresh-interval="30">
+                    <div class="container"><div class="woow_stat_content text-center py-3">
+                        <div class="display-4 fw-bold text-primary">—</div>
+                        <div class="text-muted mt-1">History by State</div>
+                    </div></div>
+                </section>
+
+                <!-- E06: ha.entity.history — avg num_state by domain (stat) -->
+                <section class="s_woow_stat pt8 pb8"
+                         data-snippet="s_woow_stat" data-name="Stat Card"
+                         data-model-name="ha.entity.history" data-operation="avg"
+                         data-stat-field="num_state" data-group-by="domain" data-domain="[]"
+                         data-sub-type="default" data-target-value="100"
+                         data-threshold-warning="50" data-threshold-danger="25"
+                         data-previous-value="0" data-title="Avg State by Domain"
+                         data-refresh-interval="30">
+                    <div class="container"><div class="woow_stat_content text-center py-3">
+                        <div class="display-4 fw-bold text-primary">—</div>
+                        <div class="text-muted mt-1">Avg State by Domain</div>
+                    </div></div>
+                </section>
+
+                <!-- E07: ha.entity.history — bar chart by domain -->
+                <section class="s_woow_chart pt16 pb8"
+                         data-snippet="s_woow_chart" data-name="Chart"
+                         data-model-name="ha.entity.history" data-chart-type="bar"
+                         data-label-field="domain" data-value-field="id"
+                         data-domain="[]" data-gauge-max="100" data-series-field=""
+                         data-title="History Count by Domain (Bar)" data-chart-height="400"
+                         data-show-legend="0" data-refresh-interval="60">
+                    <div class="container"><div class="woow_chart_content" style="position:relative; height:400px;">
+                        <div class="text-center text-muted d-flex align-items-center justify-content-center h-100">
+                            <div><div class="small">History Count by Domain (Bar)</div></div>
+                        </div>
+                    </div></div>
+                </section>
+
+                <!-- E08: ha.entity.history — pie chart by entity_state -->
+                <section class="s_woow_chart pt8 pb8"
+                         data-snippet="s_woow_chart" data-name="Chart"
+                         data-model-name="ha.entity.history" data-chart-type="pie"
+                         data-label-field="entity_state" data-value-field="id"
+                         data-domain="[]" data-gauge-max="100" data-series-field=""
+                         data-title="History by State (Pie)" data-chart-height="400"
+                         data-show-legend="1" data-refresh-interval="60">
+                    <div class="container"><div class="woow_chart_content" style="position:relative; height:400px;">
+                        <div class="text-center text-muted d-flex align-items-center justify-content-center h-100">
+                            <div><div class="small">History by State (Pie)</div></div>
+                        </div>
+                    </div></div>
+                </section>
+
+                <!-- E09: ha.entity.history — doughnut by domain -->
+                <section class="s_woow_chart pt8 pb8"
+                         data-snippet="s_woow_chart" data-name="Chart"
+                         data-model-name="ha.entity.history" data-chart-type="doughnut"
+                         data-label-field="domain" data-value-field="id"
+                         data-domain="[]" data-gauge-max="100" data-series-field=""
+                         data-title="History Domain Distribution (Doughnut)" data-chart-height="400"
+                         data-show-legend="1" data-refresh-interval="60">
+                    <div class="container"><div class="woow_chart_content" style="position:relative; height:400px;">
+                        <div class="text-center text-muted d-flex align-items-center justify-content-center h-100">
+                            <div><div class="small">History Domain Distribution (Doughnut)</div></div>
+                        </div>
+                    </div></div>
+                </section>
+
+                <!-- E10: ha.entity.history — line chart (trend by time) -->
+                <section class="s_woow_chart pt8 pb8"
+                         data-snippet="s_woow_chart" data-name="Chart"
+                         data-model-name="ha.entity.history" data-chart-type="line"
+                         data-label-field="last_changed" data-value-field="num_state"
+                         data-domain="[]" data-gauge-max="100" data-series-field=""
+                         data-title="History Trend (Line)" data-chart-height="400"
+                         data-show-legend="0" data-refresh-interval="60">
+                    <div class="container"><div class="woow_chart_content" style="position:relative; height:400px;">
+                        <div class="text-center text-muted d-flex align-items-center justify-content-center h-100">
+                            <div><div class="small">History Trend (Line)</div></div>
+                        </div>
+                    </div></div>
+                </section>
+
+                <!-- E11: ha.entity.history — bar_stacked by domain with entity_state series -->
+                <section class="s_woow_chart pt8 pb8"
+                         data-snippet="s_woow_chart" data-name="Chart"
+                         data-model-name="ha.entity.history" data-chart-type="bar_stacked"
+                         data-label-field="domain" data-value-field="id"
+                         data-domain="[]" data-gauge-max="100" data-series-field="entity_state"
+                         data-title="History Domain x State (Stacked)" data-chart-height="400"
+                         data-show-legend="1" data-refresh-interval="60">
+                    <div class="container"><div class="woow_chart_content" style="position:relative; height:400px;">
+                        <div class="text-center text-muted d-flex align-items-center justify-content-center h-100">
+                            <div><div class="small">History Domain x State (Stacked)</div></div>
+                        </div>
+                    </div></div>
+                </section>
+
+                <!-- E12: ha.entity.history — data table (full details) -->
+                <section class="s_woow_data_table pt16 pb8"
+                         data-snippet="s_woow_data_table" data-name="Data Table"
                          data-model-name="ha.entity.history"
-                         data-operation="count"
-                         data-stat-field=""
-                         data-group-by=""
-                         data-domain="[]"
-                         data-sub-type="default"
-                         data-target-value="100"
-                         data-threshold-warning="50"
-                         data-threshold-danger="25"
-                         data-previous-value="0"
-                         data-title="History Records"
+                         data-field-names="entity_name,entity_id_string,domain,entity_state,num_state,last_changed,last_updated"
+                         data-domain="[]" data-page-size="25"
+                         data-searchable="1" data-sortable="1"
+                         data-title="History Records (Full)" data-refresh-interval="60">
+                    <div class="container"><div class="woow_data_table_content">
+                        <table class="table table-sm table-hover mb-0">
+                            <thead class="table-light"><tr>
+                                <th>Entity Name</th><th>Entity ID</th><th>Domain</th><th>State</th><th>Numeric</th><th>Last Changed</th><th>Last Updated</th>
+                            </tr></thead>
+                            <tbody>
+                                <tr><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td></tr>
+                            </tbody>
+                        </table>
+                    </div></div>
+                </section>
+
+                <!-- E13: ha.entity.history — sensor history only (filtered table) -->
+                <section class="s_woow_data_table pt8 pb8"
+                         data-snippet="s_woow_data_table" data-name="Data Table"
+                         data-model-name="ha.entity.history"
+                         data-field-names="entity_name,entity_state,num_state,last_changed"
+                         data-domain="[('domain','=','sensor')]" data-page-size="25"
+                         data-searchable="1" data-sortable="1"
+                         data-title="Sensor History" data-refresh-interval="60">
+                    <div class="container"><div class="woow_data_table_content">
+                        <table class="table table-sm table-hover mb-0">
+                            <thead class="table-light"><tr>
+                                <th>Entity Name</th><th>State</th><th>Numeric</th><th>Last Changed</th>
+                            </tr></thead>
+                            <tbody>
+                                <tr><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td></tr>
+                            </tbody>
+                        </table>
+                    </div></div>
+                </section>
+
+                <!-- E14: ha.entity.history — switch history only (filtered table) -->
+                <section class="s_woow_data_table pt8 pb8"
+                         data-snippet="s_woow_data_table" data-name="Data Table"
+                         data-model-name="ha.entity.history"
+                         data-field-names="entity_name,entity_state,last_changed,last_updated"
+                         data-domain="[('domain','=','switch')]" data-page-size="25"
+                         data-searchable="1" data-sortable="1"
+                         data-title="Switch History" data-refresh-interval="60">
+                    <div class="container"><div class="woow_data_table_content">
+                        <table class="table table-sm table-hover mb-0">
+                            <thead class="table-light"><tr>
+                                <th>Entity Name</th><th>State</th><th>Last Changed</th><th>Last Updated</th>
+                            </tr></thead>
+                            <tbody>
+                                <tr><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td></tr>
+                            </tbody>
+                        </table>
+                    </div></div>
+                </section>
+
+                <!-- E15: ha.entity.history — light history only (filtered table) -->
+                <section class="s_woow_data_table pt8 pb16"
+                         data-snippet="s_woow_data_table" data-name="Data Table"
+                         data-model-name="ha.entity.history"
+                         data-field-names="entity_name,entity_state,num_state,last_changed"
+                         data-domain="[('domain','=','light')]" data-page-size="25"
+                         data-searchable="1" data-sortable="1"
+                         data-title="Light History" data-refresh-interval="60">
+                    <div class="container"><div class="woow_data_table_content">
+                        <table class="table table-sm table-hover mb-0">
+                            <thead class="table-light"><tr>
+                                <th>Entity Name</th><th>State</th><th>Numeric</th><th>Last Changed</th>
+                            </tr></thead>
+                            <tbody>
+                                <tr><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td></tr>
+                            </tbody>
+                        </table>
+                    </div></div>
+                </section>
+
+
+                <!-- ██████████████████████████████████████████████████████████████
+                     SECTION F: ENTITY GROUP ANALYTICS
+                     ██████████████████████████████████████████████████████████████ -->
+                <section class="s_text_block pt24 pb8 o_cc o_cc2">
+                    <div class="container"><h2 class="text-center">Entity Group Analytics</h2></div>
+                </section>
+
+                <!-- F01: ha.entity.group — sum entity_count (stat) -->
+                <section class="s_woow_stat pt16 pb8"
+                         data-snippet="s_woow_stat" data-name="Stat Card"
+                         data-model-name="ha.entity.group" data-operation="sum"
+                         data-stat-field="entity_count" data-group-by="" data-domain="[]"
+                         data-sub-type="default" data-target-value="500"
+                         data-threshold-warning="50" data-threshold-danger="25"
+                         data-previous-value="0" data-title="Total Grouped Entities"
                          data-refresh-interval="30">
-                    <div class="container">
-                        <div class="woow_stat_content text-center py-3">
-                            <div class="display-4 fw-bold text-primary">—</div>
-                            <div class="text-muted mt-1">History Records</div>
-                        </div>
-                    </div>
+                    <div class="container"><div class="woow_stat_content text-center py-3">
+                        <div class="display-4 fw-bold text-primary">—</div>
+                        <div class="text-muted mt-1">Total Grouped Entities</div>
+                    </div></div>
                 </section>
 
-                <!-- ══════════════════════════════════════════════
-                     Section 2: Charts — Distribution & Trends
-                     ══════════════════════════════════════════════ -->
-
-                <!-- Chart: Devices by Area (Bar) -->
-                <section class="s_woow_chart pt32 pb16"
-                         data-snippet="s_woow_chart"
-                         data-name="Chart"
-                         data-model-name="ha.device"
-                         data-chart-type="bar"
-                         data-label-field="area_id"
-                         data-value-field="id"
-                         data-domain="[]"
-                         data-gauge-max="100"
-                         data-series-field=""
-                         data-title="Devices by Area"
-                         data-chart-height="400"
-                         data-show-legend="1"
-                         data-refresh-interval="60">
-                    <div class="container">
-                        <div class="woow_chart_content" style="position:relative; height:400px;">
-                            <div class="text-center text-muted d-flex align-items-center justify-content-center h-100">
-                                <div>
-                                    <div class="d-flex align-items-end justify-content-center gap-1 mb-2" style="height:60px;">
-                                        <div style="width:12px; height:40%; background:#3B82F6; border-radius:2px;"></div>
-                                        <div style="width:12px; height:70%; background:#3B82F6; border-radius:2px;"></div>
-                                        <div style="width:12px; height:55%; background:#3B82F6; border-radius:2px;"></div>
-                                        <div style="width:12px; height:90%; background:#3B82F6; border-radius:2px;"></div>
-                                        <div style="width:12px; height:45%; background:#3B82F6; border-radius:2px;"></div>
-                                    </div>
-                                    <div class="small">Devices by Area</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <!-- F02: ha.entity.group — avg entity_count (stat) -->
+                <section class="s_woow_stat pt8 pb8"
+                         data-snippet="s_woow_stat" data-name="Stat Card"
+                         data-model-name="ha.entity.group" data-operation="avg"
+                         data-stat-field="entity_count" data-group-by="" data-domain="[]"
+                         data-sub-type="default" data-target-value="100"
+                         data-threshold-warning="50" data-threshold-danger="25"
+                         data-previous-value="0" data-title="Avg Entities per Group"
+                         data-refresh-interval="30">
+                    <div class="container"><div class="woow_stat_content text-center py-3">
+                        <div class="display-4 fw-bold text-primary">—</div>
+                        <div class="text-muted mt-1">Avg Entities per Group</div>
+                    </div></div>
                 </section>
 
-                <!-- Chart: Entities by Domain (Pie) -->
-                <section class="s_woow_chart pt16 pb16"
-                         data-snippet="s_woow_chart"
-                         data-name="Chart"
-                         data-model-name="ha.entity"
-                         data-chart-type="pie"
-                         data-label-field="domain"
-                         data-value-field="id"
-                         data-domain="[]"
-                         data-gauge-max="100"
-                         data-series-field=""
-                         data-title="Entities by Domain"
-                         data-chart-height="400"
-                         data-show-legend="1"
-                         data-refresh-interval="60">
-                    <div class="container">
-                        <div class="woow_chart_content" style="position:relative; height:400px;">
-                            <div class="text-center text-muted d-flex align-items-center justify-content-center h-100">
-                                <div>
-                                    <div class="d-flex align-items-end justify-content-center gap-1 mb-2" style="height:60px;">
-                                        <div style="width:12px; height:40%; background:#3B82F6; border-radius:2px;"></div>
-                                        <div style="width:12px; height:70%; background:#3B82F6; border-radius:2px;"></div>
-                                        <div style="width:12px; height:55%; background:#3B82F6; border-radius:2px;"></div>
-                                        <div style="width:12px; height:90%; background:#3B82F6; border-radius:2px;"></div>
-                                        <div style="width:12px; height:45%; background:#3B82F6; border-radius:2px;"></div>
-                                    </div>
-                                    <div class="small">Entities by Domain</div>
-                                </div>
-                            </div>
+                <!-- F03: ha.entity.group — bar by name -->
+                <section class="s_woow_chart pt16 pb8"
+                         data-snippet="s_woow_chart" data-name="Chart"
+                         data-model-name="ha.entity.group" data-chart-type="bar"
+                         data-label-field="name" data-value-field="entity_count"
+                         data-domain="[]" data-gauge-max="100" data-series-field=""
+                         data-title="Entities per Group (Bar)" data-chart-height="400"
+                         data-show-legend="0" data-refresh-interval="60">
+                    <div class="container"><div class="woow_chart_content" style="position:relative; height:400px;">
+                        <div class="text-center text-muted d-flex align-items-center justify-content-center h-100">
+                            <div><div class="small">Entities per Group (Bar)</div></div>
                         </div>
-                    </div>
+                    </div></div>
                 </section>
 
-                <!-- Chart: Devices by Manufacturer (Horizontal Bar) -->
-                <section class="s_woow_chart pt16 pb32"
-                         data-snippet="s_woow_chart"
-                         data-name="Chart"
-                         data-model-name="ha.device"
-                         data-chart-type="bar_horizontal"
-                         data-label-field="manufacturer"
-                         data-value-field="id"
-                         data-domain="[]"
-                         data-gauge-max="100"
-                         data-series-field=""
-                         data-title="Devices by Manufacturer"
-                         data-chart-height="400"
-                         data-show-legend="0"
-                         data-refresh-interval="60">
-                    <div class="container">
-                        <div class="woow_chart_content" style="position:relative; height:400px;">
-                            <div class="text-center text-muted d-flex align-items-center justify-content-center h-100">
-                                <div>
-                                    <div class="d-flex align-items-end justify-content-center gap-1 mb-2" style="height:60px;">
-                                        <div style="width:12px; height:40%; background:#3B82F6; border-radius:2px;"></div>
-                                        <div style="width:12px; height:70%; background:#3B82F6; border-radius:2px;"></div>
-                                        <div style="width:12px; height:55%; background:#3B82F6; border-radius:2px;"></div>
-                                        <div style="width:12px; height:90%; background:#3B82F6; border-radius:2px;"></div>
-                                        <div style="width:12px; height:45%; background:#3B82F6; border-radius:2px;"></div>
-                                    </div>
-                                    <div class="small">Devices by Manufacturer</div>
-                                </div>
-                            </div>
+                <!-- F04: ha.entity.group — pie by name -->
+                <section class="s_woow_chart pt8 pb8"
+                         data-snippet="s_woow_chart" data-name="Chart"
+                         data-model-name="ha.entity.group" data-chart-type="pie"
+                         data-label-field="name" data-value-field="entity_count"
+                         data-domain="[]" data-gauge-max="100" data-series-field=""
+                         data-title="Group Distribution (Pie)" data-chart-height="400"
+                         data-show-legend="1" data-refresh-interval="60">
+                    <div class="container"><div class="woow_chart_content" style="position:relative; height:400px;">
+                        <div class="text-center text-muted d-flex align-items-center justify-content-center h-100">
+                            <div><div class="small">Group Distribution (Pie)</div></div>
                         </div>
-                    </div>
+                    </div></div>
                 </section>
 
-                <!-- ══════════════════════════════════════════════
-                     Section 3: Data Tables — Device & Entity Lists
-                     ══════════════════════════════════════════════ -->
-
-                <!-- Table: Device List -->
-                <section class="s_woow_data_table pt32 pb16"
-                         data-snippet="s_woow_data_table"
-                         data-name="Data Table"
-                         data-model-name="ha.device"
-                         data-field-names="name,manufacturer,model,area_id,sw_version"
-                         data-domain="[]"
-                         data-page-size="10"
-                         data-searchable="1"
-                         data-sortable="1"
-                         data-title="Device List"
-                         data-refresh-interval="60">
-                    <div class="container">
-                        <div class="woow_data_table_content">
-                            <table class="table table-sm table-hover mb-0">
-                                <thead class="table-light">
-                                    <tr><th>Name</th><th>Manufacturer</th><th>Model</th><th>Area</th><th>SW Version</th></tr>
-                                </thead>
-                                <tbody>
-                                    <tr><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td></tr>
-                                    <tr><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                <!-- F05: ha.entity.group — data table -->
+                <section class="s_woow_data_table pt16 pb16"
+                         data-snippet="s_woow_data_table" data-name="Data Table"
+                         data-model-name="ha.entity.group"
+                         data-field-names="name,entity_count,description,active"
+                         data-domain="[]" data-page-size="25"
+                         data-searchable="1" data-sortable="1"
+                         data-title="Entity Group List" data-refresh-interval="60">
+                    <div class="container"><div class="woow_data_table_content">
+                        <table class="table table-sm table-hover mb-0">
+                            <thead class="table-light"><tr>
+                                <th>Name</th><th>Entity Count</th><th>Description</th><th>Active</th>
+                            </tr></thead>
+                            <tbody>
+                                <tr><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td></tr>
+                            </tbody>
+                        </table>
+                    </div></div>
                 </section>
 
-                <!-- Table: Entity List -->
+
+                <!-- ██████████████████████████████████████████████████████████████
+                     SECTION G: LABEL ANALYTICS
+                     ██████████████████████████████████████████████████████████████ -->
+                <section class="s_text_block pt24 pb8 o_cc o_cc2">
+                    <div class="container"><h2 class="text-center">Label Analytics</h2></div>
+                </section>
+
+                <!-- G01: ha.label — sum device_count (stat) -->
+                <section class="s_woow_stat pt16 pb8"
+                         data-snippet="s_woow_stat" data-name="Stat Card"
+                         data-model-name="ha.label" data-operation="sum"
+                         data-stat-field="device_count" data-group-by="" data-domain="[]"
+                         data-sub-type="default" data-target-value="200"
+                         data-threshold-warning="50" data-threshold-danger="25"
+                         data-previous-value="0" data-title="Labeled Devices"
+                         data-refresh-interval="30">
+                    <div class="container"><div class="woow_stat_content text-center py-3">
+                        <div class="display-4 fw-bold text-primary">—</div>
+                        <div class="text-muted mt-1">Labeled Devices</div>
+                    </div></div>
+                </section>
+
+                <!-- G02: ha.label — sum entity_count (stat) -->
+                <section class="s_woow_stat pt8 pb8"
+                         data-snippet="s_woow_stat" data-name="Stat Card"
+                         data-model-name="ha.label" data-operation="sum"
+                         data-stat-field="entity_count" data-group-by="" data-domain="[]"
+                         data-sub-type="default" data-target-value="500"
+                         data-threshold-warning="50" data-threshold-danger="25"
+                         data-previous-value="0" data-title="Labeled Entities"
+                         data-refresh-interval="30">
+                    <div class="container"><div class="woow_stat_content text-center py-3">
+                        <div class="display-4 fw-bold text-primary">—</div>
+                        <div class="text-muted mt-1">Labeled Entities</div>
+                    </div></div>
+                </section>
+
+                <!-- G03: ha.label — sum area_count (stat) -->
+                <section class="s_woow_stat pt8 pb8"
+                         data-snippet="s_woow_stat" data-name="Stat Card"
+                         data-model-name="ha.label" data-operation="sum"
+                         data-stat-field="area_count" data-group-by="" data-domain="[]"
+                         data-sub-type="default" data-target-value="20"
+                         data-threshold-warning="50" data-threshold-danger="25"
+                         data-previous-value="0" data-title="Labeled Areas"
+                         data-refresh-interval="30">
+                    <div class="container"><div class="woow_stat_content text-center py-3">
+                        <div class="display-4 fw-bold text-primary">—</div>
+                        <div class="text-muted mt-1">Labeled Areas</div>
+                    </div></div>
+                </section>
+
+                <!-- G04: ha.label — bar chart (device/entity/area counts) -->
+                <section class="s_woow_chart pt16 pb8"
+                         data-snippet="s_woow_chart" data-name="Chart"
+                         data-model-name="ha.label" data-chart-type="bar"
+                         data-label-field="name" data-value-field="device_count"
+                         data-domain="[]" data-gauge-max="100" data-series-field=""
+                         data-title="Devices per Label (Bar)" data-chart-height="400"
+                         data-show-legend="0" data-refresh-interval="60">
+                    <div class="container"><div class="woow_chart_content" style="position:relative; height:400px;">
+                        <div class="text-center text-muted d-flex align-items-center justify-content-center h-100">
+                            <div><div class="small">Devices per Label (Bar)</div></div>
+                        </div>
+                    </div></div>
+                </section>
+
+                <!-- G05: ha.label — pie entity_count -->
+                <section class="s_woow_chart pt8 pb8"
+                         data-snippet="s_woow_chart" data-name="Chart"
+                         data-model-name="ha.label" data-chart-type="pie"
+                         data-label-field="name" data-value-field="entity_count"
+                         data-domain="[]" data-gauge-max="100" data-series-field=""
+                         data-title="Entities per Label (Pie)" data-chart-height="400"
+                         data-show-legend="1" data-refresh-interval="60">
+                    <div class="container"><div class="woow_chart_content" style="position:relative; height:400px;">
+                        <div class="text-center text-muted d-flex align-items-center justify-content-center h-100">
+                            <div><div class="small">Entities per Label (Pie)</div></div>
+                        </div>
+                    </div></div>
+                </section>
+
+                <!-- G06: ha.label — data table -->
+                <section class="s_woow_data_table pt16 pb16"
+                         data-snippet="s_woow_data_table" data-name="Data Table"
+                         data-model-name="ha.label"
+                         data-field-names="name,label_id,device_count,entity_count,area_count,description"
+                         data-domain="[]" data-page-size="25"
+                         data-searchable="1" data-sortable="1"
+                         data-title="Label List" data-refresh-interval="60">
+                    <div class="container"><div class="woow_data_table_content">
+                        <table class="table table-sm table-hover mb-0">
+                            <thead class="table-light"><tr>
+                                <th>Name</th><th>Label ID</th><th>Devices</th><th>Entities</th><th>Areas</th><th>Description</th>
+                            </tr></thead>
+                            <tbody>
+                                <tr><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td></tr>
+                            </tbody>
+                        </table>
+                    </div></div>
+                </section>
+
+
+                <!-- ██████████████████████████████████████████████████████████████
+                     SECTION H: HA INSTANCE DETAILS
+                     ██████████████████████████████████████████████████████████████ -->
+                <section class="s_text_block pt24 pb8 o_cc o_cc2">
+                    <div class="container"><h2 class="text-center">HA Instance Details</h2></div>
+                </section>
+
+                <!-- H01: ha.instance — sum area_count (stat) -->
+                <section class="s_woow_stat pt16 pb8"
+                         data-snippet="s_woow_stat" data-name="Stat Card"
+                         data-model-name="ha.instance" data-operation="sum"
+                         data-stat-field="area_count" data-group-by="" data-domain="[]"
+                         data-sub-type="default" data-target-value="20"
+                         data-threshold-warning="50" data-threshold-danger="25"
+                         data-previous-value="0" data-title="Instance Area Count"
+                         data-refresh-interval="30">
+                    <div class="container"><div class="woow_stat_content text-center py-3">
+                        <div class="display-4 fw-bold text-primary">—</div>
+                        <div class="text-muted mt-1">Instance Area Count</div>
+                    </div></div>
+                </section>
+
+                <!-- H02: ha.instance — sum entity_count (stat) -->
+                <section class="s_woow_stat pt8 pb8"
+                         data-snippet="s_woow_stat" data-name="Stat Card"
+                         data-model-name="ha.instance" data-operation="sum"
+                         data-stat-field="entity_count" data-group-by="" data-domain="[]"
+                         data-sub-type="default" data-target-value="1000"
+                         data-threshold-warning="50" data-threshold-danger="25"
+                         data-previous-value="0" data-title="Instance Entity Count"
+                         data-refresh-interval="30">
+                    <div class="container"><div class="woow_stat_content text-center py-3">
+                        <div class="display-4 fw-bold text-primary">—</div>
+                        <div class="text-muted mt-1">Instance Entity Count</div>
+                    </div></div>
+                </section>
+
+                <!-- H03: ha.instance — data table -->
                 <section class="s_woow_data_table pt16 pb32"
-                         data-snippet="s_woow_data_table"
-                         data-name="Data Table"
-                         data-model-name="ha.entity"
-                         data-field-names="entity_id,name,domain,entity_state,area_id,last_changed"
-                         data-domain="[]"
-                         data-page-size="10"
-                         data-searchable="1"
-                         data-sortable="1"
-                         data-title="Entity List"
-                         data-refresh-interval="60">
-                    <div class="container">
-                        <div class="woow_data_table_content">
-                            <table class="table table-sm table-hover mb-0">
-                                <thead class="table-light">
-                                    <tr><th>Entity ID</th><th>Name</th><th>Domain</th><th>State</th><th>Area</th><th>Last Changed</th></tr>
-                                </thead>
-                                <tbody>
-                                    <tr><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td></tr>
-                                    <tr><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                         data-snippet="s_woow_data_table" data-name="Data Table"
+                         data-model-name="ha.instance"
+                         data-field-names="name,api_url,area_count,entity_count,last_sync_date,websocket_status"
+                         data-domain="[]" data-page-size="10"
+                         data-searchable="1" data-sortable="1"
+                         data-title="HA Instance List" data-refresh-interval="60">
+                    <div class="container"><div class="woow_data_table_content">
+                        <table class="table table-sm table-hover mb-0">
+                            <thead class="table-light"><tr>
+                                <th>Name</th><th>API URL</th><th>Areas</th><th>Entities</th><th>Last Sync</th><th>WS Status</th>
+                            </tr></thead>
+                            <tbody>
+                                <tr><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td><td class="text-muted">—</td></tr>
+                            </tbody>
+                        </table>
+                    </div></div>
                 </section>
 
             </div>
