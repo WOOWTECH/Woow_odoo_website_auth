@@ -39,6 +39,14 @@ _DEFAULT_ALLOWED_MODELS = {
     'lunch.order',
     'website.page',
     'blog.post',
+    # Home Assistant models
+    'ha.instance',
+    'ha.area',
+    'ha.device',
+    'ha.entity',
+    'ha.entity.history',
+    'ha.entity.group',
+    'ha.label',
 }
 
 _VALID_SORT_ORDERS = {'asc', 'desc'}

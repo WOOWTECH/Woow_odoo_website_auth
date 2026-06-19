@@ -31,6 +31,7 @@ navigation required.
         'views/snippets/s_woow_stat.xml',
         'views/snippets/s_woow_chart.xml',
         'views/snippets/s_woow_data_table.xml',
+        'views/ha_dashboard.xml',
     ],
     'assets': {
         'web.assets_frontend': [
