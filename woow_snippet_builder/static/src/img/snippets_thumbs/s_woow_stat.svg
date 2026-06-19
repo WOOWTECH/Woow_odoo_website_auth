@@ -1,8 +1,34 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="80" height="60" viewBox="0 0 80 60">
-  <rect width="80" height="60" rx="4" fill="#f0fdf4"/>
-  <rect x="4" y="4" width="72" height="52" rx="4" fill="white" stroke="#10B981" stroke-width="0.8" opacity="0.9"/>
-  <text x="40" y="28" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="bold" fill="#10B981">1,234</text>
-  <text x="40" y="40" text-anchor="middle" font-family="sans-serif" font-size="7" fill="#6b7280">Total Records</text>
-  <rect x="20" y="46" width="40" height="4" rx="2" fill="#e5e7eb"/>
-  <rect x="20" y="46" width="28" height="4" rx="2" fill="#10B981" opacity="0.7"/>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="82" height="60" viewBox="0 0 82 60">
+  <defs>
+    <linearGradient id="linearGradient-1" x1="50%" x2="50%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#00A09D"/>
+      <stop offset="100%" stop-color="#00E2FF"/>
+    </linearGradient>
+    <rect id="path-2" width="40" height="4" x="0" y="0" rx="2"/>
+    <filter id="filter-3" width="102.5%" height="175%" x="-1.3%" y="-18.8%" filterUnits="objectBoundingBox">
+      <feOffset dy="1" in="SourceAlpha" result="shadowOffsetOuter1"/>
+      <feComposite in="shadowOffsetOuter1" in2="SourceAlpha" operator="out" result="shadowOffsetOuter1"/>
+      <feColorMatrix in="shadowOffsetOuter1" values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 0.3 0"/>
+    </filter>
+  </defs>
+  <g fill="none" fill-rule="evenodd" class="snippets_thumbs">
+    <g class="s_woow_stat">
+      <rect width="82" height="60" class="bg"/>
+      <g class="group" transform="translate(21 12)">
+        <!-- Large KPI number placeholder (3 bars simulating digits) -->
+        <rect width="10" height="16" x="0" y="0" fill="url(#linearGradient-1)" rx="1"/>
+        <rect width="10" height="16" x="14" y="0" fill="url(#linearGradient-1)" rx="1"/>
+        <rect width="10" height="16" x="28" y="0" fill="url(#linearGradient-1)" rx="1"/>
+        <!-- Label line -->
+        <rect width="28" height="2" x="5" y="22" fill="#FFF" fill-opacity=".35" rx="1"/>
+        <!-- Progress bar track -->
+        <g class="progress" transform="translate(0 30)">
+          <use fill="#000" filter="url(#filter-3)" xlink:href="#path-2"/>
+          <use fill="#FFF" fill-opacity=".2" xlink:href="#path-2"/>
+        </g>
+        <!-- Progress bar fill -->
+        <rect width="28" height="4" x="0" y="30" fill="url(#linearGradient-1)" opacity="0.8" rx="2"/>
+      </g>
+    </g>
+  </g>
 </svg>

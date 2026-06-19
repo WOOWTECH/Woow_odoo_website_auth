@@ -1,16 +1,47 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="80" height="60" viewBox="0 0 80 60">
-  <rect width="80" height="60" rx="4" fill="#eff6ff"/>
-  <rect x="4" y="4" width="72" height="52" rx="4" fill="white" stroke="#3B82F6" stroke-width="0.8" opacity="0.9"/>
-  <rect x="8" y="8" width="20" height="20" rx="3" fill="#3B82F6" opacity="0.15"/>
-  <rect x="12" y="12" width="12" height="8" rx="2" fill="#3B82F6" opacity="0.4"/>
-  <rect x="10" y="22" width="14" height="2" rx="1" fill="#3B82F6" opacity="0.25"/>
-  <rect x="31" y="8" width="20" height="20" rx="3" fill="#3B82F6" opacity="0.15"/>
-  <rect x="35" y="12" width="12" height="8" rx="2" fill="#3B82F6" opacity="0.4"/>
-  <rect x="33" y="22" width="14" height="2" rx="1" fill="#3B82F6" opacity="0.25"/>
-  <rect x="54" y="8" width="20" height="20" rx="3" fill="#3B82F6" opacity="0.15"/>
-  <rect x="58" y="12" width="12" height="8" rx="2" fill="#3B82F6" opacity="0.4"/>
-  <rect x="56" y="22" width="14" height="2" rx="1" fill="#3B82F6" opacity="0.25"/>
-  <rect x="8" y="34" width="64" height="16" rx="3" fill="#3B82F6" opacity="0.06"/>
-  <rect x="12" y="38" width="56" height="3" rx="1" fill="#3B82F6" opacity="0.2"/>
-  <rect x="12" y="44" width="40" height="3" rx="1" fill="#3B82F6" opacity="0.12"/>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="82" height="60" viewBox="0 0 82 60">
+  <defs>
+    <linearGradient id="linearGradient-1" x1="50%" x2="50%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#00A09D"/>
+      <stop offset="100%" stop-color="#00E2FF"/>
+    </linearGradient>
+    <rect id="path-2" width="16" height="22" x="0" y="0" rx="2"/>
+    <filter id="filter-3" width="106.3%" height="104.5%" x="-3.1%" y="-1.1%" filterUnits="objectBoundingBox">
+      <feOffset dy="1" in="SourceAlpha" result="shadowOffsetOuter1"/>
+      <feComposite in="shadowOffsetOuter1" in2="SourceAlpha" operator="out" result="shadowOffsetOuter1"/>
+      <feColorMatrix in="shadowOffsetOuter1" values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 0.25 0"/>
+    </filter>
+  </defs>
+  <g fill="none" fill-rule="evenodd" class="snippets_thumbs">
+    <g class="s_woow_dynamic_content">
+      <rect width="82" height="60" class="bg"/>
+      <g class="group" transform="translate(9 8)">
+        <!-- Card 1 -->
+        <g class="card_1" transform="translate(0 0)">
+          <use fill="#000" filter="url(#filter-3)" xlink:href="#path-2"/>
+          <use fill="#FFF" fill-opacity=".15" xlink:href="#path-2"/>
+          <rect width="12" height="8" x="2" y="2" fill="url(#linearGradient-1)" opacity="0.6" rx="1"/>
+          <rect width="10" height="2" x="3" y="13" fill="#FFF" fill-opacity=".35" rx="1"/>
+          <rect width="7" height="1.5" x="3" y="17" fill="#FFF" fill-opacity=".2" rx="1"/>
+        </g>
+        <!-- Card 2 -->
+        <g class="card_2" transform="translate(20 0)">
+          <rect width="16" height="22" fill="#FFF" fill-opacity=".15" rx="2"/>
+          <rect width="12" height="8" x="2" y="2" fill="url(#linearGradient-1)" opacity="0.6" rx="1"/>
+          <rect width="10" height="2" x="3" y="13" fill="#FFF" fill-opacity=".35" rx="1"/>
+          <rect width="7" height="1.5" x="3" y="17" fill="#FFF" fill-opacity=".2" rx="1"/>
+        </g>
+        <!-- Card 3 -->
+        <g class="card_3" transform="translate(40 0)">
+          <rect width="16" height="22" fill="#FFF" fill-opacity=".15" rx="2"/>
+          <rect width="12" height="8" x="2" y="2" fill="url(#linearGradient-1)" opacity="0.6" rx="1"/>
+          <rect width="10" height="2" x="3" y="13" fill="#FFF" fill-opacity=".35" rx="1"/>
+          <rect width="7" height="1.5" x="3" y="17" fill="#FFF" fill-opacity=".2" rx="1"/>
+        </g>
+        <!-- Bottom content area -->
+        <rect width="56" height="14" x="4" y="28" fill="#FFF" fill-opacity=".08" rx="2"/>
+        <rect width="48" height="2" x="8" y="32" fill="#FFF" fill-opacity=".25" rx="1"/>
+        <rect width="32" height="2" x="8" y="37" fill="#FFF" fill-opacity=".15" rx="1"/>
+      </g>
+    </g>
+  </g>
 </svg>

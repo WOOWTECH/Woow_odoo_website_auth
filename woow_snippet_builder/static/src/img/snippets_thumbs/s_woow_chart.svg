@@ -1,11 +1,55 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="80" height="60" viewBox="0 0 80 60">
-  <rect width="80" height="60" rx="4" fill="#eff6ff"/>
-  <rect x="4" y="4" width="72" height="52" rx="4" fill="white" stroke="#3B82F6" stroke-width="0.8" opacity="0.9"/>
-  <rect x="12" y="30" width="8" height="18" rx="2" fill="#3B82F6" opacity="0.5"/>
-  <rect x="23" y="20" width="8" height="28" rx="2" fill="#3B82F6" opacity="0.7"/>
-  <rect x="34" y="26" width="8" height="22" rx="2" fill="#3B82F6" opacity="0.6"/>
-  <rect x="45" y="14" width="8" height="34" rx="2" fill="#3B82F6" opacity="0.85"/>
-  <rect x="56" y="22" width="8" height="26" rx="2" fill="#3B82F6" opacity="0.65"/>
-  <line x1="10" y1="48" x2="70" y2="48" stroke="#3B82F6" stroke-width="0.8" opacity="0.3"/>
-  <text x="40" y="11" text-anchor="middle" font-family="sans-serif" font-size="7" fill="#1d4ed8">Chart</text>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="82" height="60" viewBox="0 0 82 60">
+  <defs>
+    <linearGradient id="linearGradient-1" x1="50%" x2="50%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#00A09D"/>
+      <stop offset="100%" stop-color="#00E2FF"/>
+    </linearGradient>
+    <linearGradient id="linearGradient-2" x1="50%" x2="50%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#00A09D"/>
+      <stop offset="100%" stop-color="#00E2FF"/>
+    </linearGradient>
+    <linearGradient id="linearGradient-3" x1="50%" x2="50%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#00A09D"/>
+      <stop offset="100%" stop-color="#00E2FF"/>
+    </linearGradient>
+    <linearGradient id="linearGradient-4" x1="50%" x2="50%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#00A09D"/>
+      <stop offset="100%" stop-color="#00E2FF"/>
+    </linearGradient>
+    <linearGradient id="linearGradient-5" x1="50%" x2="50%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#00A09D"/>
+      <stop offset="100%" stop-color="#00E2FF"/>
+    </linearGradient>
+    <rect id="path-6" width="44" height="2" x="0" y="0"/>
+    <filter id="filter-7" width="102.3%" height="200%" x="-1.1%" y="-25%" filterUnits="objectBoundingBox">
+      <feOffset dy="1" in="SourceAlpha" result="shadowOffsetOuter1"/>
+      <feComposite in="shadowOffsetOuter1" in2="SourceAlpha" operator="out" result="shadowOffsetOuter1"/>
+      <feColorMatrix in="shadowOffsetOuter1" values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 0.4 0"/>
+    </filter>
+  </defs>
+  <g fill="none" fill-rule="evenodd" class="snippets_thumbs">
+    <g class="s_woow_chart">
+      <rect width="82" height="60" class="bg"/>
+      <g class="group" transform="translate(14 10)">
+        <!-- Pie/doughnut circle -->
+        <circle cx="14" cy="14" r="12" fill="url(#linearGradient-1)" opacity="0.85"/>
+        <circle cx="14" cy="14" r="6" fill="none" stroke="#FFF" stroke-width="1" stroke-opacity="0.5"/>
+        <!-- Pie slice accent -->
+        <path d="M14 2 A12 12 0 0 1 25.4 20 L14 14 Z" fill="#FFF" fill-opacity=".25"/>
+        <!-- Bar chart group -->
+        <rect width="6" height="20" x="32" y="8" fill="url(#linearGradient-2)" rx="1"/>
+        <rect width="6" height="14" x="40" y="14" fill="url(#linearGradient-3)" rx="1"/>
+        <rect width="6" height="24" x="48" y="4" fill="url(#linearGradient-4)" rx="1"/>
+        <!-- Baseline -->
+        <g class="baseline" transform="translate(5 30)">
+          <use fill="#000" filter="url(#filter-7)" xlink:href="#path-6"/>
+          <use fill="#FFF" fill-opacity=".95" xlink:href="#path-6"/>
+        </g>
+        <!-- Trend line dots -->
+        <circle cx="35" cy="38" r="2" fill="#FFF" fill-opacity=".4"/>
+        <circle cx="43" cy="35" r="2" fill="#FFF" fill-opacity=".4"/>
+        <circle cx="51" cy="37" r="2" fill="#FFF" fill-opacity=".4"/>
+      </g>
+    </g>
+  </g>
 </svg>

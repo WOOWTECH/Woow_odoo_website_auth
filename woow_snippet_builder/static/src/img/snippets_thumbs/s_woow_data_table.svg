@@ -1,22 +1,50 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="80" height="60" viewBox="0 0 80 60">
-  <rect width="80" height="60" rx="4" fill="#faf5ff"/>
-  <rect x="4" y="4" width="72" height="52" rx="4" fill="white" stroke="#8B5CF6" stroke-width="0.8" opacity="0.9"/>
-  <rect x="8" y="10" width="64" height="8" rx="2" fill="#8B5CF6" opacity="0.15"/>
-  <rect x="10" y="12" width="16" height="4" rx="1" fill="#8B5CF6" opacity="0.5"/>
-  <rect x="30" y="12" width="16" height="4" rx="1" fill="#8B5CF6" opacity="0.5"/>
-  <rect x="52" y="12" width="16" height="4" rx="1" fill="#8B5CF6" opacity="0.5"/>
-  <line x1="8" y1="18" x2="72" y2="18" stroke="#8B5CF6" stroke-width="0.5" opacity="0.3"/>
-  <rect x="10" y="22" width="14" height="3" rx="1" fill="#8B5CF6" opacity="0.2"/>
-  <rect x="30" y="22" width="12" height="3" rx="1" fill="#8B5CF6" opacity="0.2"/>
-  <rect x="52" y="22" width="14" height="3" rx="1" fill="#8B5CF6" opacity="0.2"/>
-  <rect x="10" y="28" width="12" height="3" rx="1" fill="#8B5CF6" opacity="0.15"/>
-  <rect x="30" y="28" width="16" height="3" rx="1" fill="#8B5CF6" opacity="0.15"/>
-  <rect x="52" y="28" width="10" height="3" rx="1" fill="#8B5CF6" opacity="0.15"/>
-  <rect x="10" y="34" width="16" height="3" rx="1" fill="#8B5CF6" opacity="0.1"/>
-  <rect x="30" y="34" width="10" height="3" rx="1" fill="#8B5CF6" opacity="0.1"/>
-  <rect x="52" y="34" width="14" height="3" rx="1" fill="#8B5CF6" opacity="0.1"/>
-  <rect x="10" y="40" width="10" height="3" rx="1" fill="#8B5CF6" opacity="0.08"/>
-  <rect x="30" y="40" width="14" height="3" rx="1" fill="#8B5CF6" opacity="0.08"/>
-  <rect x="52" y="40" width="12" height="3" rx="1" fill="#8B5CF6" opacity="0.08"/>
-  <text x="40" y="52" text-anchor="middle" font-family="sans-serif" font-size="6" fill="#6d28d9">1-25 of 100</text>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="82" height="60" viewBox="0 0 82 60">
+  <defs>
+    <linearGradient id="linearGradient-1" x1="50%" x2="50%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#00A09D"/>
+      <stop offset="100%" stop-color="#00E2FF"/>
+    </linearGradient>
+    <path id="path-2" d="M0 0h52v3H0z"/>
+    <filter id="filter-3" width="101.9%" height="200%" x="-1%" y="-16.7%" filterUnits="objectBoundingBox">
+      <feOffset dy="1" in="SourceAlpha" result="shadowOffsetOuter1"/>
+      <feComposite in="shadowOffsetOuter1" in2="SourceAlpha" operator="out" result="shadowOffsetOuter1"/>
+      <feColorMatrix in="shadowOffsetOuter1" values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 0.3 0"/>
+    </filter>
+  </defs>
+  <g fill="none" fill-rule="evenodd" class="snippets_thumbs">
+    <g class="s_woow_data_table">
+      <rect width="82" height="60" class="bg"/>
+      <g class="group" transform="translate(15 8)">
+        <!-- Table header row -->
+        <rect width="14" height="3" x="0" y="0" fill="url(#linearGradient-1)" rx="1"/>
+        <rect width="14" height="3" x="19" y="0" fill="url(#linearGradient-1)" rx="1"/>
+        <rect width="14" height="3" x="38" y="0" fill="url(#linearGradient-1)" rx="1"/>
+        <!-- Header separator -->
+        <g class="separator" transform="translate(0 6)">
+          <use fill="#000" filter="url(#filter-3)" xlink:href="#path-2"/>
+          <use fill="#FFF" fill-opacity=".6" xlink:href="#path-2"/>
+        </g>
+        <!-- Row 1 -->
+        <rect width="12" height="2" x="0" y="12" fill="#FFF" fill-opacity=".35" rx="1"/>
+        <rect width="10" height="2" x="19" y="12" fill="#FFF" fill-opacity=".35" rx="1"/>
+        <rect width="12" height="2" x="38" y="12" fill="#FFF" fill-opacity=".35" rx="1"/>
+        <!-- Row 2 -->
+        <rect width="10" height="2" x="0" y="18" fill="#FFF" fill-opacity=".25" rx="1"/>
+        <rect width="14" height="2" x="19" y="18" fill="#FFF" fill-opacity=".25" rx="1"/>
+        <rect width="8" height="2" x="38" y="18" fill="#FFF" fill-opacity=".25" rx="1"/>
+        <!-- Row 3 -->
+        <rect width="14" height="2" x="0" y="24" fill="#FFF" fill-opacity=".2" rx="1"/>
+        <rect width="8" height="2" x="19" y="24" fill="#FFF" fill-opacity=".2" rx="1"/>
+        <rect width="12" height="2" x="38" y="24" fill="#FFF" fill-opacity=".2" rx="1"/>
+        <!-- Row 4 -->
+        <rect width="8" height="2" x="0" y="30" fill="#FFF" fill-opacity=".15" rx="1"/>
+        <rect width="12" height="2" x="19" y="30" fill="#FFF" fill-opacity=".15" rx="1"/>
+        <rect width="10" height="2" x="38" y="30" fill="#FFF" fill-opacity=".15" rx="1"/>
+        <!-- Pagination dots -->
+        <circle cx="20" cy="40" r="2" fill="url(#linearGradient-1)" opacity="0.8"/>
+        <circle cx="26" cy="40" r="2" fill="#FFF" fill-opacity=".3"/>
+        <circle cx="32" cy="40" r="2" fill="#FFF" fill-opacity=".3"/>
+      </g>
+    </g>
+  </g>
 </svg>
