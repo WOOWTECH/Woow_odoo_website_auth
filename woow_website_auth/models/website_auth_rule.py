@@ -9,6 +9,11 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import ormcache
 
+from .ir_http import _BYPASS_PREFIXES, normalize_prefix
+
+# path_prefix 不允許出現的字元：query／fragment 分隔字元
+_PREFIX_FORBIDDEN_CHARS = ('?', '#')
+
 
 class WoowWebsiteAuthRule(models.Model):
     """網站存取控制規則"""
@@ -23,7 +28,9 @@ class WoowWebsiteAuthRule(models.Model):
     sequence = fields.Integer(
         string='排序',
         default=10,
-        help='數字越小優先級越高，拖曳可調整順序',
+        help='動態頁面：多條規則命中時以最長的 URL 前綴優先，'
+             '前綴長度相同時才依此排序（數字越小優先級越高）；'
+             '靜態頁面：同一頁面有多條規則時依此排序。拖曳可調整順序',
     )
     name = fields.Char(
         string='規則名稱',
@@ -53,7 +60,13 @@ class WoowWebsiteAuthRule(models.Model):
     )
     path_prefix = fields.Char(
         string='URL 前綴',
-        help='動態頁面使用，例如 /appointment',
+        help='動態頁面使用，例如 /appointment。\n'
+             '比對有邊界且區分大小寫：/event 匹配 /event 與 /event/...，'
+             '不匹配 /eventx；同一個 controller 的其他路由別名'
+             '（例如 /events、/events/page/2）也會一併套用此規則。\n'
+             '同一條路徑有多條規則命中時，最長的前綴優先；長度相同時才依排序。'
+             '請求路徑與各別名各自選出的規則必須全部通過。\n'
+             '存檔時會去掉尾端的 /；不可為 /，不可含 ?、# 或空白。',
     )
     website_page_id = fields.Many2one(
         'website.page',
@@ -224,18 +237,56 @@ class WoowWebsiteAuthRule(models.Model):
                     _('Dynamic page rules require a URL prefix. Rule: %s',
                       rule.name)
                 )
-            if not rule.path_prefix.startswith('/'):
+            prefix = rule.path_prefix
+            if not prefix.startswith('/'):
                 raise ValidationError(
                     _('URL prefix must start with /. Rule: %s', rule.name)
+                )
+            if any(ch.isspace() for ch in prefix):
+                raise ValidationError(
+                    _('URL prefix must not contain whitespace. Rule: %s',
+                      rule.name)
+                )
+            if any(ch in prefix for ch in _PREFIX_FORBIDDEN_CHARS):
+                raise ValidationError(
+                    _('URL prefix must not contain "?" or "#" (query strings '
+                      'and fragments are not matched). Rule: %s', rule.name)
+                )
+            if not prefix.strip('/'):
+                raise ValidationError(
+                    _('URL prefix "/" is not allowed: it would only match the '
+                      'homepage, not the whole site. Use a static page rule '
+                      'for the homepage. Rule: %s', rule.name)
+                )
+            if '//' in prefix or prefix != normalize_prefix(prefix):
+                raise ValidationError(
+                    _('URL prefix must not contain empty segments ("//") or a '
+                      'trailing "/". Rule: %s', rule.name)
+                )
+            if (prefix + '/').startswith(_BYPASS_PREFIXES):
+                raise ValidationError(
+                    _('URL prefix %(prefix)s is under a path that is never '
+                      'intercepted (backend, assets, sitemap, login…), so the '
+                      'rule would have no effect. Rule: %(rule)s',
+                      prefix=prefix, rule=rule.name)
                 )
 
     # ================================================================
     # CRUD 覆寫
     # ================================================================
 
+    @api.model
+    def _normalize_path_prefix_vals(self, vals):
+        """存檔前正規化 path_prefix：去頭尾空白與尾端斜線（只剩 / 時保留，交給 constraint 拒絕）"""
+        prefix = vals.get('path_prefix')
+        if prefix and isinstance(prefix, str):
+            vals['path_prefix'] = normalize_prefix(prefix)
+        return vals
+
     @api.model_create_multi
     def create(self, vals_list):
         """建立規則後，同步靜態頁面並清除快取"""
+        vals_list = [self._normalize_path_prefix_vals(dict(vals)) for vals in vals_list]
         records = super().create(vals_list)
         records._sync_website_pages()
         self._clear_rule_cache()
@@ -246,6 +297,7 @@ class WoowWebsiteAuthRule(models.Model):
 
         特別處理：當 active 從 True 變為 False 時，還原靜態頁面為公開。
         """
+        vals = self._normalize_path_prefix_vals(dict(vals))
         # 檢查是否有規則從啟用變為停用
         deactivating_static_rules = self.env['woow.website.auth.rule']
         if 'active' in vals and not vals['active']:
@@ -346,7 +398,11 @@ class WoowWebsiteAuthRule(models.Model):
     @api.model
     @ormcache('website_id')
     def _get_active_rules(self, website_id):
-        """取得指定網站的所有啟用規則（已排序）
+        """取得指定網站的所有啟用規則（依 sequence, id 排序）
+
+        實際套用哪些規則由 ir.http 的 applicable_rules 決定（每條候選路徑
+        各取最長前綴，同長度才看這裡的順序；選出的規則全部要通過）。path_prefix 會再正規化一次，
+        讓升級前就存在、帶尾端斜線的舊資料也能正確比對。
 
         使用 ormcache 快取，避免每次 request 都查詢資料庫。
         回傳 dict 列表（而非 recordset），避免 recordset cache 問題。
@@ -382,7 +438,7 @@ class WoowWebsiteAuthRule(models.Model):
 
             result.append({
                 'id': rule.id,
-                'path_prefix': rule.path_prefix or '',
+                'path_prefix': normalize_prefix(rule.path_prefix),
                 'auth_mode': rule.auth_mode,
                 'deny_action': rule.deny_action,
                 'redirect_url': rule.redirect_url or '',

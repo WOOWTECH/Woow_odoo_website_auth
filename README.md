@@ -34,7 +34,7 @@
 
 ## Overview
 
-**woow_website_auth** is an Odoo 18 module that provides centralized management of website page access control. Administrators can create auth rules to protect both dynamic (URL prefix-based) and static (`website.page`) pages from unauthorized access. Rules are evaluated on every frontend request via `ir.http._frontend_pre_dispatch()`, using a first-match-stops strategy ordered by sequence number.
+**woow_website_auth** is an Odoo 18 module that provides centralized management of website page access control. Administrators can create auth rules to protect both dynamic (URL prefix-based) and static (`website.page`) pages from unauthorized access. Rules are evaluated on every frontend request via `ir.http._frontend_pre_dispatch()`. Since 18.0.1.3.1 the matched controller's route aliases are checked too, each path picks its longest matching prefix (sequence only breaks ties) and all picked rules must pass — see [Rule Matching](#rule-matching).
 
 The module also introduces a membership group hierarchy (Silver Member, Gold Member) with chained inheritance, and provides a partner-level API for upgrading and downgrading user membership tiers programmatically. All active rules are cached per `website_id` using Odoo's `ormcache` for high-performance request interception with zero database overhead on every page load.
 
@@ -43,7 +43,7 @@ The module also introduces a membership group hierarchy (Silver Member, Gold Mem
 | Challenge | Solution |
 |-----------|----------|
 | No centralized page access control in Odoo Community | Unified auth rule management under Website > Configuration > Auth Rules |
-| Dynamic pages (URLs) cannot be protected without custom code | URL prefix matching intercepts any dynamic route (e.g., `/appointment`, `/blog`) |
+| Dynamic pages (URLs) cannot be protected without custom code | URL prefix matching intercepts any dynamic route (e.g., `/appointment`, `/blog`), including the other routes registered for the same controller (e.g., `/event` also covers `/events`) |
 | Static pages require manual visibility editing per page | Auth rules auto-sync visibility settings to `website.page` records |
 | Only simple login-required checks are available | Three auth modes: `signed_in`, `group`, and `multi_group` |
 | No flexible deny behavior | Three deny actions: redirect to login, redirect to custom URL, or render 403 |
@@ -329,7 +329,7 @@ Navigate to **Website > Configuration > Auth Rules**.
 | Field | Description | Example |
 |---|---|---|
 | **Rule Name** (`name`) | Descriptive name for the rule. | `Protect Appointments` |
-| **Sequence** (`sequence`) | Priority order (lower = higher priority). | `10` |
+| **Sequence** (`sequence`) | Tie-breaker (lower = higher priority) when matching dynamic rules have the same prefix length; the longest prefix always wins. | `10` |
 | **Active** (`active`) | Enable or disable the rule. | `True` |
 | **Website** (`website_id`) | Scope to a specific website, or leave empty for all websites. | *(empty)* |
 
@@ -365,7 +365,7 @@ The module creates two membership groups with chained inheritance:
 | **Silver Member** | `woow_website_auth.group_member_silver` | `base.group_portal` |
 | **Gold Member** | `woow_website_auth.group_member_gold` | `woow_website_auth.group_member_silver` |
 
-Use the partner API to manage membership tiers:
+Use the partner API to manage membership tiers. **The caller must be in `woow_website_auth.group_membership_manager`** (since 18.0.1.3.1). `base.group_erp_manager` (Access Rights, therefore also Settings / system administrators) implies it and `base.user_admin` is added directly. Plain `base.group_user` employees get an `AccessError`. **API / AI bot accounts (e.g. the evergreen and mujimed integrations) must be added to this group** (Settings → Users → account → "Membership Administration" → "Membership Manager"). The group implies `base.group_user`, so it cannot be given to portal users.
 
 ```python
 # Upgrade a partner to Silver Member
@@ -377,6 +377,20 @@ partner.action_upgrade_to_gold()
 # Downgrade a partner back to Portal
 partner.action_downgrade_to_portal()
 ```
+
+### Rule Matching
+
+Since 18.0.1.3.1:
+
+1. **Candidate paths** — the request path plus the static part (before the first `<`) of every route registered for the matched endpoint. website_event registers `/event`, `/event/page/<int:page>`, `/events` and `/events/page/<int:page>` for one handler, so a `/event` rule also gates `/events`, `/events/page/2` and `/events?search=x`. If any alias of an endpoint falls under a rule prefix, every URL of that endpoint gets the rule.
+2. **Boundary-aware, case-sensitive** — `/app` matches `/app` and `/app/...`, not `/application`.
+3. **Longest prefix wins, per path** — for each candidate path separately, the rule with the longest prefix covering that path is chosen; `sequence` (then id) only breaks ties. A narrower rule can loosen the paths it really covers, but it cannot loosen another path through an alias.
+4. **All chosen rules must pass** — the rules chosen for the request path and for each alias are all checked; if any denies, its `deny_action` is applied (the request path's rule first). Example: with `/event` (Silver) and `/event/page` (signed in), both `/event` and `/events` require Silver; with `/event` (Silver) and `/events` (signed in), both URLs also require Silver, because they are the same endpoint.
+5. **Fail closed** — an unknown `auth_mode` or `deny_action` denies access.
+
+A legacy `/` prefix (no longer accepted on save) matches the homepage and endpoints whose routes start with a converter (their static part is `/`); it never becomes a site-wide rule.
+
+`path_prefix` is normalised on save (surrounding whitespace and trailing `/` removed: `/event/` → `/event`). `/`, `?`, `#`, whitespace, `//` and prefixes under never-intercepted paths are rejected.
 
 ---
 
@@ -392,6 +406,16 @@ Auth rule management is restricted to two groups:
 | **Website Designer** | `website.group_website_designer` | Full CRUD on `woow.website.auth.rule` |
 
 Portal users and public users have no access to auth rule records. Attempting to read or write rules from a portal user context will raise an `AccessError`.
+
+Website designers can disable or rewrite the gate. That is intentional (designers can already edit pages and views and are trusted internal users); if only system administrators should manage rules, remove `access_woow_website_auth_rule_designer`.
+
+Membership actions (`action_upgrade_to_silver`, `action_upgrade_to_gold`, `action_downgrade_to_portal`) write `groups_id` with `sudo()`, so they first require `woow_website_auth.group_membership_manager`.
+
+### Known Limitations
+
+- **URL gate, not data-layer protection** — routes outside the protected prefix (`/sitemap.xml`, `/website/search`, `/website/snippet/filters` JSON, `/web/image/...`) can still expose URLs, names or cover images of protected content. Use record rules / publication flags to protect the data itself.
+- **Never-intercepted paths** — `/web/`, `/web/static/`, `/web/assets/`, `/web/content/`, `/web/image/`, `/website/translations`, `/website/action/`, `/website/access-denied`, `/sitemap`, `/_service_worker`.
+- **Redirect loops** — a `redirect_custom` target that would itself be denied (by the same or another rule) returns 403 instead of redirecting.
 
 ### Static Page Sync
 
@@ -467,6 +491,17 @@ Test plans and results are documented in the `docs/plans/` directory.
 ---
 
 ## Changelog
+
+### v18.0.1.3.1 (2026-11-07) — security fixes (sweep 20261107-well101)
+
+| Finding | Fingerprint | Fix |
+|---|---|---|
+| 77785ac194d4 | `review:ir_http-prefix-match-misses-alias-routes` | Rules match every route alias of the matched endpoint; a `/event` rule now gates `/events` and `/events/page/N`. Each candidate path picks its own longest-prefix rule and all picked rules must pass, so a narrower rule that only covers an alias cannot loosen the canonical path |
+| 82541b3223e0 | `review:res_partner-membership-actions-any-internal-user-sudo-group-write` | New `group_membership_manager` (implied by `base.group_erp_manager`, given to `base.user_admin`) required by the membership actions |
+
+Hardening: longest prefix wins (88c50ec527f8), unknown `auth_mode` fails closed (d14c065e4ec8), `path_prefix` normalisation/validation plus a post-migrate that normalises existing rows (525b1ac28c0c), prefixes under never-intercepted paths rejected and limitations documented (0e8469bca5ed), `redirect_custom` loop check now tests whether the target (including its endpoint's aliases) would be denied (82c57dcf0814), designer CRUD documented (faeafae89a9a).
+
+**Behaviour changes** — formerly public aliases such as `/events` now follow the `/event` rule; longest prefix (per path) replaces first-match-by-sequence; when an endpoint's URLs are covered by several rules the user must pass all of them; existing prefixes with a trailing `/` (previously never matching) start to apply after upgrade; accounts with only `base.group_user` (including API/AI bots) must be added to `group_membership_manager`.
 
 ### v18.0.1.0.0 (Initial Release)
 
