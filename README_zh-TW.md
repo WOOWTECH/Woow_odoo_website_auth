@@ -57,9 +57,9 @@
 
 ### 動態頁面保護
 
-- **URL 前綴比對** — 以 `startswith` 比對請求路徑（如 `/appointment`、`/blog`、`/shop/vip`）
+- **URL 前綴比對** — 有邊界的前綴比對（`/app` 匹配 `/app`、`/app/...`，不匹配 `/application`），並涵蓋同一個 controller 的所有路由別名（如 `/event` 規則也擋 `/events`、`/events/page/2`）
 - **前台攔截引擎** — 繼承 `ir.http._frontend_pre_dispatch()`，在 controller 處理前攔截
-- **排序優先機制** — 依 `sequence` 排序，第一條命中即停止，支援拖曳排序
+- **最長前綴優先** — 多條規則同時命中時取最長的前綴；前綴長度相同才依 `sequence` 排序（支援拖曳排序）
 - **多網站支援** — 規則可指定特定網站或留空適用所有網站
 
 ### 靜態頁面保護
@@ -109,8 +109,8 @@
 │  │                                                           │   │
 │  │  1. 取得 website_id                                       │   │
 │  │  2. 從 ormcache 載入規則                                  │   │
-│  │  3. 按 sequence 排序，startswith 比對路徑                 │   │
-│  │  4. 第一條命中 → 檢查權限 → 通過/拒絕                    │   │
+│  │  3. 請求路徑＋endpoint 路由別名，邊界前綴比對             │   │
+│  │  4. 最長前綴勝出 → 檢查權限 → 通過/拒絕                  │   │
 │  └────────────────────────────┬──────────────────────────────┘   │
 │                               │                                  │
 │  核心規則模型                 │                                  │
@@ -377,7 +377,7 @@ docker compose up -d
 | 欄位 | 說明 | 範例 |
 |------|------|------|
 | **規則名稱** | 規則的識別名稱 | 「保護預約頁面」 |
-| **排序** | 優先級（數字越小越優先） | 10 |
+| **排序** | 動態規則前綴長度相同時的優先級（數字越小越優先）；最長前綴永遠優先 | 10 |
 | **頁面類型** | 選擇「動態頁面」 | `dynamic` |
 | **URL 前綴** | 要保護的路徑前綴 | `/appointment` |
 | **驗證模式** | 存取條件 | `signed_in` / `group` / `multi_group` |
@@ -404,7 +404,13 @@ docker compose up -d
 
 ### 4. 管理會員等級
 
-透過 JSON-RPC 或後台操作 `res.partner` 上的方法：
+透過 JSON-RPC 或後台操作 `res.partner` 上的方法。**呼叫者必須屬於「會員等級管理員」群組**
+（`woow_website_auth.group_membership_manager`，18.0.1.3.1 起）：
+
+- `base.group_erp_manager`（Access Rights，含 Settings／系統管理員）自動隱含此群組，`base.user_admin` 也會被直接加入。
+- 只有 `base.group_user` 的一般員工呼叫會得到 `AccessError`。
+- **API／AI bot 帳號（例如 evergreen、mujimed 的整合帳號）必須另外加入此群組**：設定 → 使用者 → 該帳號 → 「Membership Administration」選「Membership Manager」。
+- 此群組隱含 `base.group_user`，不能給 portal 使用者。
 
 ```python
 # 升級為 Silver 會員
@@ -417,17 +423,24 @@ partner.action_upgrade_to_gold()
 partner.action_downgrade_to_portal()
 ```
 
-### 5. 規則優先順序
+### 5. 規則比對與優先順序（18.0.1.3.1 起）
 
-規則按 `sequence` 欄位排序，**第一條命中即停止**。可在列表視圖中拖曳調整順序。
+1. **候選路徑**：請求路徑本身，加上命中的 controller（endpoint）所有註冊路由的靜態部分（第一個 `<` 之前）。
+   例如 website_event 的列表頁同時註冊 `/event`、`/event/page/<int:page>`、`/events`、`/events/page/<int:page>`，
+   所以 `/event` 規則也會擋 `/events`、`/events/page/2`、`/events?search=x`。
+   **注意**：若某個 endpoint 的任一別名落在規則前綴內，該 endpoint 的所有網址都會套用此規則。
+2. **邊界比對、區分大小寫**：`/app` 匹配 `/app`、`/app/...`，不匹配 `/application`。
+3. **最長前綴優先**：多條規則同時命中時，取前綴最長的那條；長度相同才依 `sequence`、id。
 
 ```
-sequence=10  /appointment/vip  → group: Gold Member
-sequence=20  /appointment      → signed_in
-sequence=30  /blog             → group: Silver Member
+sequence=10  /appointment      → signed_in
+sequence=20  /appointment/vip  → group: Gold Member
 ```
 
-> `/appointment/vip/123` 會命中 sequence=10 的規則（要求 Gold），而非 sequence=20 的規則。
+> `/appointment/vip/123` 命中 `/appointment/vip`（要求 Gold），即使 `/appointment` 的 sequence 比較小。
+
+`path_prefix` 存檔時會去掉頭尾空白與尾端 `/`（`/event/` → `/event`）；不可為 `/`、不可含 `?`、`#`、空白或 `//`，
+也不可落在永不攔截的路徑下（`/web/`、`/sitemap`、`/website/translations`、`/website/action/`、`/website/access-denied` 等）。
 
 ---
 
@@ -468,6 +481,15 @@ sequence=30  /blog             → group: Silver Member
 - **XSS 防護** — 框架層級的輸出跳脫
 - **redirect 參數安全** — 使用 `werkzeug.urls.url_quote()` 編碼重導向路徑
 - **local redirect** — `request.redirect(url, local=True)` 防止開放重導向攻擊
+- **fail closed** — 未知的 `auth_mode`／`deny_action` 一律拒絕
+- **防重導向迴圈** — `redirect_custom` 的目標若會再被（同一條或另一條）規則擋下，直接回 403
+- **會員 action 權限** — 升降級 action 以 `sudo()` 寫 `groups_id`，因此先要求呼叫者屬於 `group_membership_manager`
+
+### 已知限制
+
+- **只做 URL 前綴閘門，不是資料層保護**：`/sitemap.xml`、`/website/search`、`/website/snippet/filters`（JSON）、`/web/image/...` 等不在受保護前綴下的路由，仍可能顯示受保護頁面的網址、名稱或封面。需要保護資料本身時，請搭配 record rule 或 `website_published`。
+- **永不攔截的路徑**：`/web/`、`/web/static/`、`/web/assets/`、`/web/content/`、`/web/image/`、`/website/translations`、`/website/action/`、`/website/access-denied`、`/sitemap`、`/_service_worker`。
+- **網站設計師可管理規則**：`website.group_website_designer` 對 `woow.website.auth.rule` 有完整 CRUD（可停用或修改閘門）。設計師本來就能修改頁面與 view，屬內部信任使用者；若要求只有系統管理員能改，請移除 `access_woow_website_auth_rule_designer`。
 
 ---
 
@@ -531,6 +553,22 @@ sequence=30  /blog             → group: Silver Member
 
 ## 更新日誌
 
+### v18.0.1.3.1 (2026-11-07) — 安全修補（security sweep 20261107-well101）
+
+| Finding | 指紋 | 修補 |
+|---|---|---|
+| 77785ac194d4 | `review:ir_http-prefix-match-misses-alias-routes` | 規則比對涵蓋命中 endpoint 的所有路由別名，`/event` 規則現在也擋 `/events`、`/events/page/N` |
+| 82541b3223e0 | `review:res_partner-membership-actions-any-internal-user-sudo-group-write` | 新增 `group_membership_manager`（由 `base.group_erp_manager` 隱含、`base.user_admin` 直接加入），會員 action 要求此群組 |
+
+強化項目：最長前綴優先（88c50ec527f8）、未知 `auth_mode` fail closed（d14c065e4ec8）、`path_prefix` 正規化與驗證＋升級時正規化既有資料（525b1ac28c0c）、拒絕落在永不攔截路徑下的前綴並在本文件列出限制（0e8469bca5ed）、`redirect_custom` 防迴圈改為檢查導向目標是否會被規則擋下（82c57dcf0814）、記錄網站設計師的規則 CRUD 權限（faeafae89a9a）。
+
+**行為改變（升級前請確認）**
+
+- 原本公開的別名頁（如 `/events`）會依 `/event` 規則導向登入／拒絕頁；其他規則的 endpoint 若有別名，生效範圍也會一起擴大。
+- 規則改為最長前綴優先，不再單純依 sequence 第一條命中。
+- 帶尾端 `/` 的既有前綴（以前永不命中）升級後開始生效；`/`、含 `?`／`#`／空白的前綴只記 warning，不改值。
+- 只有 `base.group_user` 的帳號（含 API／AI bot）呼叫會員 action 會得到 `AccessError`，須加入 `group_membership_manager`。
+
 ### v18.0.1.0.0 (2026-05)
 
 - 初始版本
@@ -538,7 +576,7 @@ sequence=30  /blog             → group: Silver Member
 - 靜態頁面保護：規則同步至 `website.page`
 - 三種驗證模式：`signed_in`、`group`、`multi_group`
 - 三種拒絕行為：`redirect_login`、`redirect_custom`、`render_403`
-- 排序優先機制：sequence 排序，第一條命中即停止
+- 排序優先機制：sequence 排序，第一條命中即停止（18.0.1.3.1 起改為最長前綴優先）
 - ormcache 快取：按 `website_id` 快取，CRUD 自動清除
 - 會員等級群組：Silver Member → Gold Member（鏈式繼承）
 - 合作夥伴升降級 API：upgrade / downgrade 方法

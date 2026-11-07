@@ -3,29 +3,37 @@
 
 在 res.partner 上提供會員等級操作方法，
 供外部系統（含 AI/LLM）透過 JSON-RPC call_kw 呼叫。
-僅限 internal user（base.group_user）以上權限呼叫，
-防止 portal user 透過 RPC 自行提權。
+
+18.0.1.3.1 起只有「會員等級管理員」群組
+（woow_website_auth.group_membership_manager）的成員可以呼叫。
+base.group_erp_manager（Access Rights 管理員，含 Settings／系統管理員）
+自動隱含此群組，base.user_admin 也會直接被加入。
+只有 base.group_user 的一般內部使用者、API／AI bot 帳號
+必須另外加入此群組，否則會得到 AccessError。
 """
 
 from odoo import _, models
 from odoo.exceptions import AccessError
+
+MEMBERSHIP_MANAGER_GROUP = 'woow_website_auth.group_membership_manager'
 
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     def _check_membership_manager(self):
-        """檢查當前用戶是否具有 internal user 以上權限
+        """檢查當前用戶是否為會員等級管理員
 
-        僅 internal user（base.group_user）以上可執行會員升級/降級操作，
-        防止 portal user 透過 JSON-RPC 自行提權。
-        admin、專用 API 帳號、AI/LLM bot 帳號皆可通過。
+        寫入 res.users.groups_id 在 core 只開放給 base.group_erp_manager，
+        這些 action 以 sudo() 寫入，因此先在這裡限制呼叫者：
+        必須屬於 woow_website_auth.group_membership_manager
+        （由 base.group_erp_manager 隱含；API／AI bot 帳號要另外加入）。
 
-        :raises AccessError: portal user 或 public user 呼叫時拋出
+        :raises AccessError: 呼叫者不在會員等級管理員群組時拋出
         """
-        if not self.env.user.has_group('base.group_user'):
+        if not self.env.user.has_group(MEMBERSHIP_MANAGER_GROUP):
             raise AccessError(
-                _('Only internal users can modify membership levels.')
+                _('Only membership managers can modify membership levels.')
             )
 
     def _get_membership_groups(self):
@@ -43,9 +51,9 @@ class ResPartner(models.Model):
 
         加入 Silver group。
         若 partner 沒有關聯的用戶，則不做任何操作。
-        僅限 internal user 以上權限呼叫。
+        僅限會員等級管理員呼叫。
 
-        :raises AccessError: portal/public user 呼叫時拋出
+        :raises AccessError: 呼叫者不是會員等級管理員時拋出
         """
         self._check_membership_manager()
         silver_group = self.env.ref('woow_website_auth.group_member_silver')
@@ -62,9 +70,9 @@ class ResPartner(models.Model):
 
         加入 Gold group。透過 implied_ids 鏈式繼承，
         Gold 自動包含 Silver 和 Portal 權限。
-        僅限 internal user 以上權限呼叫。
+        僅限會員等級管理員呼叫。
 
-        :raises AccessError: portal/public user 呼叫時拋出
+        :raises AccessError: 呼叫者不是會員等級管理員時拋出
         """
         self._check_membership_manager()
         gold_group = self.env.ref('woow_website_auth.group_member_gold')
@@ -82,9 +90,9 @@ class ResPartner(models.Model):
         移除所有 membership group（Silver、Gold），
         並明確確保 Portal group 被保留（避免 implied_ids
         反向移除後失去 Portal 存取權）。
-        僅限 internal user 以上權限呼叫。
+        僅限會員等級管理員呼叫。
 
-        :raises AccessError: portal/public user 呼叫時拋出
+        :raises AccessError: 呼叫者不是會員等級管理員時拋出
         """
         self._check_membership_manager()
         membership_groups = self._get_membership_groups()

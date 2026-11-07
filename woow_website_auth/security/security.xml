@@ -30,4 +30,35 @@
         </record>
 
     </data>
+
+    <!-- ============================================================ -->
+    <!-- 會員等級管理員（18.0.1.3.1 起）                                -->
+    <!-- 只有此群組可呼叫 res.partner.action_upgrade_to_silver／gold、  -->
+    <!-- action_downgrade_to_portal（這些 action 以 sudo 寫 groups_id）。 -->
+    <!-- base.group_erp_manager 隱含此群組；API／AI bot 帳號要另外加入。  -->
+    <!-- ============================================================ -->
+    <data noupdate="0">
+
+        <record id="module_category_membership_administration" model="ir.module.category">
+            <field name="name">Membership Administration</field>
+            <field name="description">可升級／降級會員等級（Silver／Gold）</field>
+            <field name="sequence">31</field>
+        </record>
+
+        <record id="group_membership_manager" model="res.groups">
+            <field name="name">Membership Manager</field>
+            <field name="category_id" ref="module_category_membership_administration"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="comment">可透過 res.partner 的會員 action（含 JSON-RPC call_kw）升級／降級 portal 使用者的會員等級。API／AI bot 帳號需加入此群組。</field>
+        </record>
+
+        <record id="base.group_erp_manager" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('woow_website_auth.group_membership_manager'))]"/>
+        </record>
+
+        <record id="base.user_admin" model="res.users">
+            <field name="groups_id" eval="[(4, ref('woow_website_auth.group_membership_manager'))]"/>
+        </record>
+
+    </data>
 </odoo>
