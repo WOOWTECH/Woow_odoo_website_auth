@@ -1,9 +1,16 @@
 # -*- coding: utf-8 -*-
-"""18.0.1.3.1：正規化既有動態規則的 path_prefix
+"""18.0.1.3.1：正規化既有動態規則的 path_prefix；把 admin 加入會員等級管理員
+
+- base.user_admin 加入 group_membership_manager：security.xml 把這筆放在
+  noupdate="1"，而 noupdate 資料在 -u 時不會套用到已存在的 xmlid，所以從舊版
+  升級時在這裡補一次；新安裝由 security.xml 處理。admin 若屬於
+  base.group_erp_manager，本來就會因隱含關係擁有此群組。
 
 - 去掉頭尾空白與尾端斜線（'/event/' → '/event'）。舊版比對時會變成
   '/event//'，規則永遠不命中；正規化後規則開始生效（屬預期的行為改變）。
-- 只剩斜線的 '/' 保持不動（執行時仍只匹配首頁，與舊版相同），只記 warning。
+- 只剩斜線的 '/' 保持不動，只記 warning。執行時它匹配首頁，以及路由以
+  轉換器開頭（例如 ``/<model(...):x>``，靜態部分為 ``/``）的 endpoint；
+  不會變成全站規則。
 - 含 ?、#、內部空白、或落在不攔截路徑下的前綴不改值，只記 warning，
   讓管理員自行修正（下次存檔時 constraint 會要求修正）。
 
@@ -11,6 +18,8 @@
 """
 
 import logging
+
+from odoo import SUPERUSER_ID, api
 
 _logger = logging.getLogger(__name__)
 
@@ -35,9 +44,21 @@ def _normalize(prefix):
     return prefix.rstrip('/') or '/'
 
 
+def _add_admin_to_membership_manager(cr):
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    group = env.ref('woow_website_auth.group_membership_manager', raise_if_not_found=False)
+    admin = env.ref('base.user_admin', raise_if_not_found=False)
+    if not group or not admin or group in admin.groups_id:
+        return
+    # ORM 寫入：會一併清除 has_group 等快取
+    admin.write({'groups_id': [(4, group.id)]})
+    _logger.info('woow_website_auth: added base.user_admin to group_membership_manager')
+
+
 def migrate(cr, version):
     if not version:
         return
+    _add_admin_to_membership_manager(cr)
     cr.execute("""
         SELECT id, path_prefix
           FROM woow_website_auth_rule

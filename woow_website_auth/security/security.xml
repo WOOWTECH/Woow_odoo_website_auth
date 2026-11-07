@@ -56,6 +56,14 @@
             <field name="implied_ids" eval="[(4, ref('woow_website_auth.group_membership_manager'))]"/>
         </record>
 
+    </data>
+
+    <!-- admin 直接授權只在安裝時套用（noupdate）；從舊版升級時由              -->
+    <!-- migrations/18.0.1.3.1/post-migrate.py 補加一次。                      -->
+    <!-- 注意：admin 若屬於 base.group_erp_manager，會因上面的隱含關係一直擁有  -->
+    <!-- 此群組（Odoo 的隱含群組無法單獨移除）；這筆是給不在 erp_manager 的 admin。 -->
+    <data noupdate="1">
+
         <record id="base.user_admin" model="res.users">
             <field name="groups_id" eval="[(4, ref('woow_website_auth.group_membership_manager'))]"/>
         </record>

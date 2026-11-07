@@ -12,8 +12,14 @@
    （例如 website_event 的 ``/event``、``/events``、``/events/page/<int:page>``），
    只要任一別名落在規則前綴內，整個 endpoint 都套用該規則。
 2. 前綴比對有邊界：``/app`` 只匹配 ``/app`` 與 ``/app/...``，不匹配 ``/application``。
-3. 多條規則都命中時，**最長前綴優先**；前綴長度相同時才依 sequence、id 決定。
-4. 未知的 auth_mode／deny_action 一律拒絕（fail closed）。
+3. **每一條候選路徑各自**取最長前綴的規則（前綴長度相同時才依 sequence、id 決定）。
+   最長前綴只在「同一條路徑」的規則之間比較：較窄的規則可以放寬它真正涵蓋的
+   路徑，但不能透過別名放寬別的路徑。
+4. 各候選路徑選出的規則**全部都要通過**才放行（fail closed）；任一條拒絕就依
+   那條規則的 deny_action 處理，請求路徑本身選出的規則優先。
+   例：``/event``（Silver）＋``/event/page``（已登入）時，``/event`` 與 ``/events``
+   都要 Silver。
+5. 未知的 auth_mode／deny_action 一律拒絕（fail closed）。
 """
 
 import logging
@@ -115,27 +121,49 @@ def candidate_paths(path, routing_rule=None):
     return paths
 
 
-def match_rule(rules, paths):
-    """在規則列表中找出要套用的規則
+def match_rule(rules, path):
+    """找出涵蓋「單一路徑」的規則：最長前綴優先
 
-    最長前綴優先；長度相同時取 rules 中較前面的（rules 已依 sequence, id 排序）。
+    長度相同時取 rules 中較前面的（rules 已依 sequence, id 排序）。
 
     :param rules: list of dict（來自 _get_active_rules）
-    :param paths: 候選路徑 list
+    :param path: str，已正規化的路徑
     :return: dict 或 None
     """
     best = None
     best_len = -1
     for rule in rules:
         prefix = normalize_prefix(rule.get('path_prefix'))
-        if not prefix:
+        if not prefix or len(prefix) <= best_len:
             continue
-        if len(prefix) <= best_len:
-            continue
-        if any(path_under_prefix(p, prefix) for p in paths):
+        if path_under_prefix(path, prefix):
             best = rule
             best_len = len(prefix)
     return best
+
+
+def applicable_rules(rules, paths):
+    """每條候選路徑各自選出最長前綴的規則，去重後依候選順序回傳
+
+    第一條候選路徑是請求路徑本身，所以它選出的規則排在最前面。
+    呼叫端必須要求使用者**全部通過**（見模組說明第 4 點）。
+
+    :param rules: list of dict（來自 _get_active_rules）
+    :param paths: 候選路徑 list（candidate_paths 的結果）
+    :return: list of dict
+    """
+    result = []
+    seen = set()
+    for path in paths:
+        rule = match_rule(rules, path)
+        if rule is None:
+            continue
+        key = rule.get('id') or id(rule)
+        if key in seen:
+            continue
+        seen.add(key)
+        result.append(rule)
+    return result
 
 
 class IrHttp(models.AbstractModel):
@@ -155,8 +183,8 @@ class IrHttp(models.AbstractModel):
         1. 防禦性檢查：排除後台路徑與靜態資源
         2. 取得當前 website_id
         3. 從 cache 讀取 active 規則（僅動態頁面）
-        4. 以請求路徑＋命中 endpoint 的所有路由別名比對規則，最長前綴優先
-        5. 命中即檢查權限，不通過則依 deny_action 處理
+        4. 以請求路徑＋命中 endpoint 的所有路由別名，每條各取最長前綴的規則
+        5. 所有選出的規則都要通過；任一條不通過則依該規則的 deny_action 處理
         """
         super()._frontend_pre_dispatch()
 
@@ -166,20 +194,42 @@ class IrHttp(models.AbstractModel):
         if path.startswith(_BYPASS_PREFIXES):
             return
 
-        rule = cls._woow_find_rule(
-            candidate_paths(path, getattr(request, _ROUTING_RULE_ATTR, None))
-        )
-        if rule and not cls._check_auth(rule):
-            cls._deny_access(rule, path)
+        paths = candidate_paths(path, getattr(request, _ROUTING_RULE_ATTR, None))
+        for rule in cls._woow_find_rules(paths):
+            if not cls._check_auth(rule):
+                cls._deny_access(rule, path)
 
     @classmethod
-    def _woow_find_rule(cls, paths):
-        """依候選路徑找出當前網站要套用的規則（dict 或 None）"""
+    def _woow_find_rules(cls, paths):
+        """依候選路徑找出當前網站要套用的規則（list of dict，請求路徑的規則在前）"""
         # 取得當前 website（此時已由 website 模組設定完成）
         website = getattr(request, 'website', None)
         website_id = website.id if website else 0
         rules = request.env['woow.website.auth.rule']._get_active_rules(website_id)
-        return match_rule(rules, paths)
+        return applicable_rules(rules, paths)
+
+    @classmethod
+    def _woow_denying_rule(cls, paths, user):
+        """回傳第一條會拒絕 user 的規則（沒有則 None）"""
+        for rule in cls._woow_find_rules(paths):
+            if not cls._woow_rule_allows(rule, user):
+                return rule
+        return None
+
+    @classmethod
+    def _woow_routing_rule_for(cls, path):
+        """查出 path 會命中的 werkzeug Rule（只讀路由表，無副作用；查不到回 None）"""
+        try:
+            adapter = request.env['ir.http'].routing_map().bind_to_environ(
+                request.httprequest.environ)
+            rule, _args = adapter.match(path_info=path, return_rule=True)
+            return rule
+        except werkzeug.exceptions.HTTPException:
+            # NotFound／MethodNotAllowed／RequestRedirect：退回只看字面路徑
+            return None
+        except Exception:  # noqa: BLE001 — 路由轉換器出錯時不影響導向判斷
+            _logger.debug('woow_website_auth: cannot match %s', path, exc_info=True)
+            return None
 
     @classmethod
     def _check_auth(cls, rule):
@@ -278,7 +328,8 @@ class IrHttp(models.AbstractModel):
     def _woow_redirect_loops(cls, redirect_url, user):
         """導向目標是否會再被規則拒絕（同一條規則或另一條規則）
 
-        只看導向目標的路徑部分（去掉 scheme／host／query／fragment）。
+        只看導向目標的路徑部分（去掉 scheme／host／query／fragment），
+        並和一般請求一樣納入目標 endpoint 的所有路由別名。
         """
         target = urlsplit(redirect_url or '/').path or '/'
         if not target.startswith('/'):
@@ -286,5 +337,6 @@ class IrHttp(models.AbstractModel):
             return False
         if target.startswith(_BYPASS_PREFIXES):
             return False
-        target_rule = cls._woow_find_rule([normalize_path(target)])
-        return bool(target_rule) and not cls._woow_rule_allows(target_rule, user)
+        target = normalize_path(target)
+        paths = candidate_paths(target, cls._woow_routing_rule_for(target))
+        return cls._woow_denying_rule(paths, user) is not None

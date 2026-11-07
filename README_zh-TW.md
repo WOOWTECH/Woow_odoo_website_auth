@@ -110,7 +110,7 @@
 │  │  1. 取得 website_id                                       │   │
 │  │  2. 從 ormcache 載入規則                                  │   │
 │  │  3. 請求路徑＋endpoint 路由別名，邊界前綴比對             │   │
-│  │  4. 最長前綴勝出 → 檢查權限 → 通過/拒絕                  │   │
+│  │  4. 每條路徑取最長前綴 → 全部通過才放行，否則拒絕          │   │
 │  └────────────────────────────┬──────────────────────────────┘   │
 │                               │                                  │
 │  核心規則模型                 │                                  │
@@ -430,7 +430,11 @@ partner.action_downgrade_to_portal()
    所以 `/event` 規則也會擋 `/events`、`/events/page/2`、`/events?search=x`。
    **注意**：若某個 endpoint 的任一別名落在規則前綴內，該 endpoint 的所有網址都會套用此規則。
 2. **邊界比對、區分大小寫**：`/app` 匹配 `/app`、`/app/...`，不匹配 `/application`。
-3. **最長前綴優先**：多條規則同時命中時，取前綴最長的那條；長度相同才依 `sequence`、id。
+3. **每條路徑各自最長前綴優先**：請求路徑與每個別名分開比對，各自取涵蓋它的最長前綴規則；長度相同才依 `sequence`、id。較窄的規則只能放寬它真正涵蓋的路徑，不能透過別名放寬別的路徑。
+4. **選出的規則全部都要通過**：任一條拒絕就依該規則的 `deny_action` 處理（請求路徑本身的規則優先）。例：`/event`（Silver）＋`/event/page`（已登入）時，`/event` 與 `/events` 都要 Silver；`/event`（Silver）＋`/events`（已登入）時，因為是同一個 endpoint，兩個網址也都要 Silver。
+5. **未知的 auth_mode／deny_action 一律拒絕**。
+
+舊資料的 `/` 前綴（存檔時已不接受）會匹配首頁，以及路由以轉換器開頭（靜態部分為 `/`）的 endpoint，不會變成全站規則。
 
 ```
 sequence=10  /appointment      → signed_in
@@ -557,15 +561,15 @@ sequence=20  /appointment/vip  → group: Gold Member
 
 | Finding | 指紋 | 修補 |
 |---|---|---|
-| 77785ac194d4 | `review:ir_http-prefix-match-misses-alias-routes` | 規則比對涵蓋命中 endpoint 的所有路由別名，`/event` 規則現在也擋 `/events`、`/events/page/N` |
+| 77785ac194d4 | `review:ir_http-prefix-match-misses-alias-routes` | 規則比對涵蓋命中 endpoint 的所有路由別名，`/event` 規則現在也擋 `/events`、`/events/page/N`。每條候選路徑各自取最長前綴的規則、選出的規則全部要通過，只涵蓋別名的較窄規則不能放寬主路徑 |
 | 82541b3223e0 | `review:res_partner-membership-actions-any-internal-user-sudo-group-write` | 新增 `group_membership_manager`（由 `base.group_erp_manager` 隱含、`base.user_admin` 直接加入），會員 action 要求此群組 |
 
-強化項目：最長前綴優先（88c50ec527f8）、未知 `auth_mode` fail closed（d14c065e4ec8）、`path_prefix` 正規化與驗證＋升級時正規化既有資料（525b1ac28c0c）、拒絕落在永不攔截路徑下的前綴並在本文件列出限制（0e8469bca5ed）、`redirect_custom` 防迴圈改為檢查導向目標是否會被規則擋下（82c57dcf0814）、記錄網站設計師的規則 CRUD 權限（faeafae89a9a）。
+強化項目：最長前綴優先（88c50ec527f8）、未知 `auth_mode` fail closed（d14c065e4ec8）、`path_prefix` 正規化與驗證＋升級時正規化既有資料（525b1ac28c0c）、拒絕落在永不攔截路徑下的前綴並在本文件列出限制（0e8469bca5ed）、`redirect_custom` 防迴圈改為檢查導向目標（含其 endpoint 的別名）是否會被規則擋下（82c57dcf0814）、記錄網站設計師的規則 CRUD 權限（faeafae89a9a）。
 
 **行為改變（升級前請確認）**
 
 - 原本公開的別名頁（如 `/events`）會依 `/event` 規則導向登入／拒絕頁；其他規則的 endpoint 若有別名，生效範圍也會一起擴大。
-- 規則改為最長前綴優先，不再單純依 sequence 第一條命中。
+- 規則改為（每條路徑各自）最長前綴優先，不再單純依 sequence 第一條命中；同一個 endpoint 的網址被多條規則涵蓋時，使用者必須全部通過。
 - 帶尾端 `/` 的既有前綴（以前永不命中）升級後開始生效；`/`、含 `?`／`#`／空白的前綴只記 warning，不改值。
 - 只有 `base.group_user` 的帳號（含 API／AI bot）呼叫會員 action 會得到 `AccessError`，須加入 `group_membership_manager`。
 

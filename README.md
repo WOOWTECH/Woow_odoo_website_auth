@@ -34,7 +34,7 @@
 
 ## Overview
 
-**woow_website_auth** is an Odoo 18 module that provides centralized management of website page access control. Administrators can create auth rules to protect both dynamic (URL prefix-based) and static (`website.page`) pages from unauthorized access. Rules are evaluated on every frontend request via `ir.http._frontend_pre_dispatch()`. Since 18.0.1.3.1 the matched controller's route aliases are checked too and the longest matching prefix wins (sequence only breaks ties) — see [Rule Matching](#rule-matching).
+**woow_website_auth** is an Odoo 18 module that provides centralized management of website page access control. Administrators can create auth rules to protect both dynamic (URL prefix-based) and static (`website.page`) pages from unauthorized access. Rules are evaluated on every frontend request via `ir.http._frontend_pre_dispatch()`. Since 18.0.1.3.1 the matched controller's route aliases are checked too, each path picks its longest matching prefix (sequence only breaks ties) and all picked rules must pass — see [Rule Matching](#rule-matching).
 
 The module also introduces a membership group hierarchy (Silver Member, Gold Member) with chained inheritance, and provides a partner-level API for upgrading and downgrading user membership tiers programmatically. All active rules are cached per `website_id` using Odoo's `ormcache` for high-performance request interception with zero database overhead on every page load.
 
@@ -384,8 +384,11 @@ Since 18.0.1.3.1:
 
 1. **Candidate paths** — the request path plus the static part (before the first `<`) of every route registered for the matched endpoint. website_event registers `/event`, `/event/page/<int:page>`, `/events` and `/events/page/<int:page>` for one handler, so a `/event` rule also gates `/events`, `/events/page/2` and `/events?search=x`. If any alias of an endpoint falls under a rule prefix, every URL of that endpoint gets the rule.
 2. **Boundary-aware, case-sensitive** — `/app` matches `/app` and `/app/...`, not `/application`.
-3. **Longest prefix wins** — when several rules match, the longest prefix is applied; `sequence` (then id) only breaks ties.
-4. **Fail closed** — an unknown `auth_mode` or `deny_action` denies access.
+3. **Longest prefix wins, per path** — for each candidate path separately, the rule with the longest prefix covering that path is chosen; `sequence` (then id) only breaks ties. A narrower rule can loosen the paths it really covers, but it cannot loosen another path through an alias.
+4. **All chosen rules must pass** — the rules chosen for the request path and for each alias are all checked; if any denies, its `deny_action` is applied (the request path's rule first). Example: with `/event` (Silver) and `/event/page` (signed in), both `/event` and `/events` require Silver; with `/event` (Silver) and `/events` (signed in), both URLs also require Silver, because they are the same endpoint.
+5. **Fail closed** — an unknown `auth_mode` or `deny_action` denies access.
+
+A legacy `/` prefix (no longer accepted on save) matches the homepage and endpoints whose routes start with a converter (their static part is `/`); it never becomes a site-wide rule.
 
 `path_prefix` is normalised on save (surrounding whitespace and trailing `/` removed: `/event/` → `/event`). `/`, `?`, `#`, whitespace, `//` and prefixes under never-intercepted paths are rejected.
 
@@ -493,12 +496,12 @@ Test plans and results are documented in the `docs/plans/` directory.
 
 | Finding | Fingerprint | Fix |
 |---|---|---|
-| 77785ac194d4 | `review:ir_http-prefix-match-misses-alias-routes` | Rules match every route alias of the matched endpoint; a `/event` rule now gates `/events` and `/events/page/N` |
+| 77785ac194d4 | `review:ir_http-prefix-match-misses-alias-routes` | Rules match every route alias of the matched endpoint; a `/event` rule now gates `/events` and `/events/page/N`. Each candidate path picks its own longest-prefix rule and all picked rules must pass, so a narrower rule that only covers an alias cannot loosen the canonical path |
 | 82541b3223e0 | `review:res_partner-membership-actions-any-internal-user-sudo-group-write` | New `group_membership_manager` (implied by `base.group_erp_manager`, given to `base.user_admin`) required by the membership actions |
 
-Hardening: longest prefix wins (88c50ec527f8), unknown `auth_mode` fails closed (d14c065e4ec8), `path_prefix` normalisation/validation plus a post-migrate that normalises existing rows (525b1ac28c0c), prefixes under never-intercepted paths rejected and limitations documented (0e8469bca5ed), `redirect_custom` loop check now tests whether the target would be denied (82c57dcf0814), designer CRUD documented (faeafae89a9a).
+Hardening: longest prefix wins (88c50ec527f8), unknown `auth_mode` fails closed (d14c065e4ec8), `path_prefix` normalisation/validation plus a post-migrate that normalises existing rows (525b1ac28c0c), prefixes under never-intercepted paths rejected and limitations documented (0e8469bca5ed), `redirect_custom` loop check now tests whether the target (including its endpoint's aliases) would be denied (82c57dcf0814), designer CRUD documented (faeafae89a9a).
 
-**Behaviour changes** — formerly public aliases such as `/events` now follow the `/event` rule; longest prefix replaces first-match-by-sequence; existing prefixes with a trailing `/` (previously never matching) start to apply after upgrade; accounts with only `base.group_user` (including API/AI bots) must be added to `group_membership_manager`.
+**Behaviour changes** — formerly public aliases such as `/events` now follow the `/event` rule; longest prefix (per path) replaces first-match-by-sequence; when an endpoint's URLs are covered by several rules the user must pass all of them; existing prefixes with a trailing `/` (previously never matching) start to apply after upgrade; accounts with only `base.group_user` (including API/AI bots) must be added to `group_membership_manager`.
 
 ### v18.0.1.0.0 (Initial Release)
 

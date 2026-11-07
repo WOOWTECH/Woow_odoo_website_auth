@@ -64,7 +64,8 @@ class WoowWebsiteAuthRule(models.Model):
              '比對有邊界且區分大小寫：/event 匹配 /event 與 /event/...，'
              '不匹配 /eventx；同一個 controller 的其他路由別名'
              '（例如 /events、/events/page/2）也會一併套用此規則。\n'
-             '多條規則同時命中時，最長的前綴優先；長度相同時才依排序。\n'
+             '同一條路徑有多條規則命中時，最長的前綴優先；長度相同時才依排序。'
+             '請求路徑與各別名各自選出的規則必須全部通過。\n'
              '存檔時會去掉尾端的 /；不可為 /，不可含 ?、# 或空白。',
     )
     website_page_id = fields.Many2one(
@@ -399,8 +400,8 @@ class WoowWebsiteAuthRule(models.Model):
     def _get_active_rules(self, website_id):
         """取得指定網站的所有啟用規則（依 sequence, id 排序）
 
-        實際套用哪一條由 ir.http 的 match_rule 決定（最長前綴優先，
-        同長度才看這裡的順序）。path_prefix 會再正規化一次，
+        實際套用哪些規則由 ir.http 的 applicable_rules 決定（每條候選路徑
+        各取最長前綴，同長度才看這裡的順序；選出的規則全部要通過）。path_prefix 會再正規化一次，
         讓升級前就存在、帶尾端斜線的舊資料也能正確比對。
 
         使用 ormcache 快取，避免每次 request 都查詢資料庫。
